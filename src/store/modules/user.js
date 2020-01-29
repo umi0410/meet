@@ -1,8 +1,8 @@
 const LOGIN = "user/LOGIN";
 const LOGOUT = "user/LOGOUT";
-
-export const login = color => ({ type: LOGIN, color });
-
+const GET_ACCOUNT = "user/GET_ACCOUNT";
+export const login = account => ({ type: LOGIN, ...account });
+export const getAccount = () => ({ type: GET_ACCOUNT });
 const initialState = {
 	email: undefined,
 	nickname: undefined,
@@ -19,6 +19,9 @@ export default function user(state = initialState, action) {
 				email: action.email,
 				nickname: action.nickname
 			};
+		case GET_ACCOUNT:
+			return state;
+
 		case LOGOUT:
 			return {
 				...state,

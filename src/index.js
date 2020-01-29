@@ -16,11 +16,10 @@ const devTools =
 	window.__REDUX_DEVTOOLS_EXTENSION__();
 
 const store = createStore(rootReducer, devTools);
-console.log(store.getState());
 // **** 리덕스 개발자도구 적용
 ReactDOM.render(
 	<Provider store={store}>
-		<App />
+		<App store={store} />
 	</Provider>,
 	document.getElementById("root")
 );
