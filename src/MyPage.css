@@ -1,0 +1,9 @@
+ul {
+}
+li a.mypageList {
+	color: black;
+	font-size: 1rem;
+	width: 60%;
+	margin: auto;
+	margin-bottom: 20px;
+}
