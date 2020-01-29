@@ -1,0 +1,8 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:regular,bold,italic&subset=latin,latin-ext");
+@font-face {
+	font-family: "Amarillo";
+	src: url(/Amarillo.ttf) format("truetype");
+}
+body p {
+	font-size: 0.8rem;
+}

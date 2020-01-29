@@ -32,7 +32,7 @@ const App = props => {
 				light
 				fixed="top"
 				style={{
-					height: "80px",
+					height: "100px",
 					borderBottom: "1px solid lightgray",
 					background: "white"
 				}}>
@@ -45,25 +45,16 @@ const App = props => {
 					navbar
 					style={{
 						position: "absolute",
-						top: "80px",
-						background: "rgb(0,0,0,0.5)",
-						borderRadius: "0px 0px 8px 8px",
-						paddingLeft: "8px",
-						paddingRight: "8px"
+						top: "100px",
+						background: "rgb(0,0,0,0.2)"
 					}}>
 					<Nav navbar>
 						<NavItem>
-							<NavLink
-								href="/components/"
-								style={{ color: "white" }}>
-								마이페이지
-							</NavLink>
+							<NavLink href="/components/">Components</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink
-								href="https://github.com/reactstrap/reactstrap"
-								style={{ color: "white" }}>
-								로그인
+							<NavLink href="https://github.com/reactstrap/reactstrap">
+								GitHub
 							</NavLink>
 						</NavItem>
 					</Nav>
@@ -88,7 +79,8 @@ const App = props => {
 				<div
 					style={{
 						background: "rgb(0, 0, 0, 0.2)",
-						padding: "20px",
+						paddingTop: "20px",
+						paddingBottom: "20px",
 						width: "100vw"
 					}}>
 					<h2 style={{ color: "white" }}>
@@ -327,15 +319,7 @@ const App = props => {
 			</Container>
 
 			{/* Footer */}
-			<Container fluid={true}>
-				<Row style={{ background: "black" }} className="pt-5 pb-3">
-					<Container>
-						<p style={{ textAlign: "center", color: "white" }}>
-							Copyright reserved by umi, 2020
-						</p>
-					</Container>
-				</Row>
-			</Container>
+			<Container fluid={true}></Container>
 		</div>
 	);
 };
