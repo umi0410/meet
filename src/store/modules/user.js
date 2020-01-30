@@ -1,8 +1,10 @@
 const LOGIN = "user/LOGIN";
 const LOGOUT = "user/LOGOUT";
 const GET_ACCOUNT = "user/GET_ACCOUNT";
+const SET_CHAT_ROOM = "user/SET_CHAT_ROOM";
 export const login = account => ({ type: LOGIN, ...account });
 export const getAccount = () => ({ type: GET_ACCOUNT });
+export const setChatRoom = chatRoom => ({ type: SET_CHAT_ROOM, ...chatRoom });
 const initialState = {
 	email: undefined,
 	nickname: undefined,
@@ -14,13 +16,23 @@ const initialState = {
 export default function user(state = initialState, action) {
 	switch (action.type) {
 		case LOGIN:
+			console.log(action);
 			return {
 				...state,
 				email: action.email,
-				nickname: action.nickname
+				nickname: action.nickname,
+				university: action.university,
+				_id: action._id
 			};
 		case GET_ACCOUNT:
 			return state;
+		case SET_CHAT_ROOM:
+			return {
+				...state,
+				chatRoom: action.match,
+				partner: action.partner,
+				socket: action.socket
+			};
 
 		case LOGOUT:
 			return {

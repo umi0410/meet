@@ -41,6 +41,7 @@ class LoginPage extends Component {
 			.then(res => res.json())
 			.then(data => {
 				//아주 위험한 행위지만 일당 쿠키 그냥 박음
+				alert(data.token);
 				document.cookie = "token=" + data.token;
 				this.props.login(utils.parseJwt(data.token));
 				window.location.href = "/";
@@ -114,7 +115,7 @@ class LoginPage extends Component {
 							className="m-auto"
 							size="sm"
 							onClick={() => {
-								this.handleSubmit();
+								window.location.href = "register";
 							}}>
 							회원가입
 						</Button>

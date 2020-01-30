@@ -30,7 +30,7 @@ const MessageBoxPartner = props => {
 				<img src="/profile.png" style={{ width: "100%" }}></img>
 			</Col>
 			<Col xs="10" className="pl-0">
-				<div>까꿍이</div>
+				<div>{props.message.sender.nickname}</div>
 				<div
 					style={{
 						width: "fit-content",
@@ -42,8 +42,7 @@ const MessageBoxPartner = props => {
 						boxShadow: "0px 0px 8px 3px lightgray",
 						borderRadius: "8px"
 					}}>
-					나야나~ 나야나~ Lorem ipsum. Once upon a time, there was a
-					greedy king, who was famous for the badness
+					{props.message.data}
 				</div>
 			</Col>
 		</Row>

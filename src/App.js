@@ -6,6 +6,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import "./fonts.css";
 import "bootstrap/dist/css/bootstrap.css";
+// import "./chat";
 import { Route, BrowserRouter } from "react-router-dom";
 import {
 	Button,
@@ -34,12 +35,38 @@ import MeetingPage from "./MeetingPage/MeetingPage";
 import MeetingSetting from "./MeetingSetting/MeetingSetting";
 
 class App extends Component {
+	state = {};
 	componentDidMount() {
+		let tokenDecoded;
 		if (document.cookie) {
 			if (utils.extractCookies("token")) {
-				this.props.login(utils.parseJwt(utils.extractCookies("token")));
+				//componentDidMount에서는 redux를 통한 props를 이용할 수 없는듯.
+				//그래서 직접 jwt 이용함...
+				tokenDecoded = utils.parseJwt(utils.extractCookies("token"));
+				this.props.login(tokenDecoded);
+				console.log(tokenDecoded);
+				//socket 생성할 때 나의 login 정보도 넘겨줌. 그걸 이용해 나에게만 연락할 때 이걸 이용.
+				let socket = io.connect("http://localhost:3000/", {
+					//
+					query: "id=" + tokenDecoded._id
+				});
+				//socket을 state에 담아봄
+				this.setState({ ...this.state, socket });
+
+				socket.on("connect", function(data) {
+					console.log("Connected...");
+				});
+				socket.on("receiveMessage", function(data) {
+					alert(
+						`${data.sender.nickname}으로 부터 메시지 도착\n>  ${data.message}`
+					);
+				});
 			}
 		}
+
+		//   socket.on('chat message', function(msg){
+		//     $('#messages').append($('<li>').text(msg));
+		//   });
 	}
 
 	render() {
@@ -75,7 +102,12 @@ class App extends Component {
 					<Route
 						exact
 						path="/messenger-list"
-						component={MessengerList}></Route>
+						component={MessengerList}
+						component={() => (
+							<MessengerList
+								socket={this.state.socket}></MessengerList>
+						)}></Route>
+					{/* ></Route> */}
 					<Route
 						exact
 						path="/messenger-detail"

@@ -69,7 +69,6 @@ const AppBar = props => {
 							</NavLink>
 						) : (
 							<NavLink href="/login" style={{ color: "white" }}>
-								{console.log(props.user)}
 								Login
 							</NavLink>
 						)}
