@@ -6,7 +6,7 @@ import logo from "../logo.svg";
 import "../App.css";
 import "../fonts.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { BrowserRouter } from "react-router-dom";
+import AnimateHeight from "react-animate-height";
 import utils from "../utils";
 import settings from "../settings";
 import {
@@ -30,9 +30,20 @@ import MessageBoxMe from "./MessageBoxMe";
 import MessageBoxPartner from "./MessageBoxPartner";
 
 class MessengerDetail extends Component {
-	state = { input: {}, messages: [], matches: {} };
+	state = {
+		input: {},
+		messages: [],
+		matches: {}
+	};
 
 	handleInputChage = utils.handleInputChange.bind(this);
+	handleCopyMessage = () => {
+		let messages = this.state.messages;
+		if (messages.length > 0) {
+			messages.push(messages[messages.length - 1]);
+			this.setState({ ...this.state, messages });
+		}
+	};
 	sendMessage = e => {
 		e.preventDefault();
 		let socket = this.props.user.socket;
@@ -47,6 +58,20 @@ class MessengerDetail extends Component {
 				_id: this.props.user.chatRoom._id
 			},
 			message: this.state.input.message
+		});
+	};
+
+	handleAddingMessage = e => {
+		let socket = this.props.user.socket;
+		socket.on("sentMessage", message => {
+			console.log("sentMessage");
+			console.log(message);
+			let messages = [...this.state.messages];
+			messages.push(message);
+			this.setState({
+				...this.state,
+				messages: messages
+			});
 		});
 	};
 
@@ -73,6 +98,7 @@ class MessengerDetail extends Component {
 					"로그인 정보가 올바르지 않습니다.\n확인하고 다시 시도해주세요."
 				);
 			});
+		this.handleAddingMessage();
 	}
 	render() {
 		return (
@@ -82,7 +108,7 @@ class MessengerDetail extends Component {
 					{/* 주고 받은 메시지 */}
 					<Container fluid={true}>
 						{/* 상대방 */}
-						{console.log(this.state.messages)}
+
 						{this.state.messages.map(message => {
 							//내 꺼
 							if (

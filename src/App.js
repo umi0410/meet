@@ -24,6 +24,7 @@ import {
 	Fade
 } from "reactstrap";
 import utils from "./utils";
+import settings from "./settings";
 import MainPage from "./MainPage";
 import AppBar from "./AppBar";
 import LoginPage from "./LoginPage";
@@ -46,7 +47,7 @@ class App extends Component {
 				this.props.login(tokenDecoded);
 				console.log(tokenDecoded);
 				//socket 생성할 때 나의 login 정보도 넘겨줌. 그걸 이용해 나에게만 연락할 때 이걸 이용.
-				let socket = io.connect("http://localhost:3000/", {
+				let socket = io.connect(settings.apiServer, {
 					//
 					query: "id=" + tokenDecoded._id
 				});
@@ -57,8 +58,9 @@ class App extends Component {
 					console.log("Connected...");
 				});
 				socket.on("receiveMessage", function(data) {
+					console.log(data);
 					alert(
-						`${data.sender.nickname}으로 부터 메시지 도착\n>  ${data.message}`
+						`${data.sender.nickname}으로 부터 메시지 도착\n>  ${data.data}`
 					);
 				});
 			}
