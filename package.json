@@ -17,7 +17,8 @@
 		"react-scripts": "3.3.0",
 		"reactstrap": "^8.4.1",
 		"redux": "^4.0.5",
-		"redux-actions": "^2.6.5"
+		"redux-actions": "^2.6.5",
+		"web-push": "^3.4.3"
 	},
 	"scripts": {
 		"start": "PORT=4040 HOST=0.0.0.0 react-scripts start .env",

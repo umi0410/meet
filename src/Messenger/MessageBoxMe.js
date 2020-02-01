@@ -38,18 +38,7 @@ const MessageBoxMe = props => {
 			</Row>
 			<Row>
 				<Col>
-					<div
-						className="float-right"
-						style={{
-							width: "fit-content",
-							maxWidth: "90%",
-							background: "white",
-							border: "1px solid #f8f8f8",
-							padding: "5px",
-							wordBreak: "break-all",
-							boxShadow: "0px 0px 8px 3px lightgray",
-							borderRadius: "8px"
-						}}>
+					<div className="float-right my-message-box">
 						{props.message.data}
 					</div>
 				</Col>

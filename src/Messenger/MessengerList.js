@@ -6,7 +6,7 @@ import { login, getAccount, setChatRoom } from "../store/modules/user";
 import logo from "../logo.svg";
 import "../App.css";
 import "../fonts.css";
-import settings from "../settings";
+
 import utils from "../utils";
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter } from "react-router-dom";
@@ -29,7 +29,7 @@ import {
 class MessengerList extends Component {
 	state = { matches: [] };
 	componentDidMount() {
-		fetch(settings.apiServer + `/matches`, {
+		fetch(process.env.REACT_APP_API_URL + `/matches`, {
 			method: "get",
 			headers: {
 				"Content-Type": "application/json",

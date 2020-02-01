@@ -1,0 +1,23 @@
+.partner-message-box {
+	width: fit-content;
+	width: -moz-fit-content;
+	max-width: 90%;
+	background: white;
+	border: 1px solid #f8f8f8;
+	padding: 5px;
+	word-break: break-all;
+	box-shadow: 0px 0px 8px 3px lightgray;
+	border-radius: 8px;
+}
+
+.my-message-box {
+	width: fit-content;
+	width: -moz-fit-content;
+	max-width: 90%;
+	background: white;
+	border: 1px solid #f8f8f8;
+	padding: 5px;
+	word-break: break-all;
+	box-shadow: 0px 0px 8px 3px lightgray;
+	border-radius: 8px;
+}

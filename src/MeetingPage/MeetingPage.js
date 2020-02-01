@@ -3,11 +3,12 @@ import React, { useState, Component } from "react";
 import { connect } from "react-redux";
 import { login, getAccount } from "../store/modules/user";
 import logo from "../logo.svg";
-import settings from "../settings";
+
 import utils from "../utils";
 import "../App.css";
 import "../fonts.css";
 import "../fade.css";
+import "./Meeting.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter } from "react-router-dom";
 import {
@@ -27,9 +28,13 @@ import {
 } from "reactstrap";
 import FadeIn from "react-fade-in";
 class MeetingPage extends Component {
-	state = { partner: {} };
+	constructor(props) {
+		super(props);
+		this.state = { partner: { likes: [], hates: [], questions: [] } };
+	}
+
 	getMatch = () => {
-		fetch(settings.apiServer + `/meetings`, {
+		fetch(process.env.REACT_APP_API_URL + `/meetings`, {
 			method: "get",
 			headers: {
 				"Content-Type": "application/json",
@@ -37,12 +42,11 @@ class MeetingPage extends Component {
 			}
 		})
 			.then(res => {
-				console.log(res);
 				return res.json();
 			})
 			.then(data => {
-				//아주 위험한 행위지만 일당 쿠키 그냥 박음
 				this.setState({ ...this.state, partner: data });
+				console.log(this.state);
 			})
 			.catch(err => {
 				console.error("Error:", err);
@@ -56,7 +60,7 @@ class MeetingPage extends Component {
 	}
 	handleLike = () => {
 		fetch(
-			settings.apiServer +
+			process.env.REACT_APP_API_URL +
 				`/meetings?action=like&id=${this.state.partner._id}`,
 			{
 				method: "post",
@@ -90,6 +94,8 @@ class MeetingPage extends Component {
 			});
 	};
 	render() {
+		const likesColor = "#f26666";
+		const hatesColor = "#3e5375";
 		return (
 			<React.Fragment>
 				{/* Main introducing */}
@@ -129,7 +135,11 @@ class MeetingPage extends Component {
 					</Badge>
 					<Row className="clearfix">
 						<Col className="" size={1}>
-							<span style={{ fontWeight: "bold" }}>
+							<span
+								style={{
+									fontWeight: "bold",
+									fontSize: "1.2rem"
+								}}>
 								{this.state.partner.nickname}
 							</span>
 							, 24
@@ -174,7 +184,7 @@ class MeetingPage extends Component {
 								<h5
 									style={{
 										fontFamily: "Amarillo",
-										color: "#f26666"
+										color: likesColor
 									}}>
 									likes
 								</h5>
@@ -183,35 +193,15 @@ class MeetingPage extends Component {
 						{/* likes-hashtags */}
 						<Row>
 							<Col>
-								<h3>
-									<Badge
-										className="mr-1"
-										style={{
-											color: "#f26666",
-											background: "white",
-											border: "1px solid #f26666"
-										}}>
-										맥주
-									</Badge>
-									<Badge
-										className="mr-1"
-										style={{
-											color: "#f26666",
-											background: "white",
-											border: "1px solid #f26666"
-										}}>
-										영화보기
-									</Badge>
-									<Badge
-										className="mr-1"
-										style={{
-											color: "#f26666",
-											background: "white",
-											border: "1px solid #f26666"
-										}}>
-										보드타기
-									</Badge>
-								</h3>
+								<h4>
+									{this.state.partner.likes.map(like => {
+										return (
+											<Badge className="like-outline mr-1">
+												{like}
+											</Badge>
+										);
+									})}
+								</h4>
 							</Col>
 						</Row>
 					</div>
@@ -223,7 +213,7 @@ class MeetingPage extends Component {
 								<h5
 									style={{
 										fontFamily: "Amarillo",
-										color: "#211557"
+										color: hatesColor
 									}}>
 									hates
 								</h5>
@@ -233,35 +223,15 @@ class MeetingPage extends Component {
 						{/* hates-hashtags */}
 						<Row>
 							<Col>
-								<h3>
-									<Badge
-										className="mr-1"
-										style={{
-											color: "#211557",
-											background: "white",
-											border: "1px solid #211557"
-										}}>
-										소주
-									</Badge>
-									<Badge
-										className="mr-1"
-										style={{
-											color: "#211557",
-											background: "white",
-											border: "1px solid #211557"
-										}}>
-										독서
-									</Badge>
-									<Badge
-										className="mr-1"
-										style={{
-											color: "#211557",
-											background: "white",
-											border: "1px solid #211557"
-										}}>
-										싸움
-									</Badge>
-								</h3>
+								<h4>
+									{this.state.partner.hates.map(hate => {
+										return (
+											<Badge className="hate-outline mr-1">
+												{hate}
+											</Badge>
+										);
+									})}
+								</h4>
 							</Col>
 						</Row>
 					</div>
@@ -277,49 +247,27 @@ class MeetingPage extends Component {
 						}}
 						className="pt-3 pb-3">
 						{/* Row가 한 Card */}
-						<Row className="pt-2 pb-2 mr-0 ml-0">
-							<Col
-								xs="10"
-								className="m-auto"
-								style={{
-									borderRadius: "8px",
-									background: "white",
-									boxShadow: "0px 0px 23px 1px lightgray"
-								}}>
-								<p
+						{this.state.partner.questions.map(question => (
+							<Row className="pt-2 pb-2 mr-0 ml-0">
+								{console.log(question)}
+								<Col
+									xs="10"
+									className="m-auto"
 									style={{
-										borderBottom: "1px solid lightgray"
+										borderRadius: "8px",
+										background: "white",
+										boxShadow: "0px 0px 23px 1px lightgray"
 									}}>
-									바라는 데이트 유형은 무엇인가요?
-								</p>
-								<p>
-									- 특별한 것을 하지 않아도, 함께함으로써
-									특별할 수 있는 데이트요.
-								</p>
-							</Col>
-						</Row>
-
-						<Row className="pt-2 pb-2 mr-0 ml-0">
-							<Col
-								xs="10"
-								className="m-auto"
-								style={{
-									borderRadius: "8px",
-									background: "white",
-									boxShadow: "0px 0px 23px 1px lightgray"
-								}}>
-								<p
-									style={{
-										borderBottom: "1px solid lightgray"
-									}}>
-									자신이 생각하는 자신의 장점은?
-								</p>
-								<p>
-									- 요리를 잘해요...ㅎㅎ 같이 도시락 싸서
-									피크닉가고 산책했으면 좋겠어요!
-								</p>
-							</Col>
-						</Row>
+									<p
+										style={{
+											borderBottom: "1px solid lightgray"
+										}}>
+										{question.title}
+									</p>
+									<p>- {question.answer}</p>
+								</Col>
+							</Row>
+						))}
 					</div>
 				</Container>
 			</React.Fragment>

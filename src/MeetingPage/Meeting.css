@@ -1,0 +1,25 @@
+.liked {
+	color: white;
+	background: #f26666;
+	border: 1px solid #f26666;
+}
+.like-outline {
+	color: #f26666;
+	background: white;
+	border: 1px solid #f26666;
+}
+.hated {
+	color: white;
+	background: #3e5375;
+	border: 1px solid #3e5375;
+}
+.hate-outline {
+	color: #3e5375;
+	background: white;
+	border: 1px solid #3e5375;
+}
+.not-selected {
+	color: #5e5e5e;
+	background: white;
+	border: 1px solid #5e5e5e;
+}
