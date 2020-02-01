@@ -7,7 +7,7 @@ import "./App.css";
 import "./fonts.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter } from "react-router-dom";
-import settings from "./settings";
+
 import utils from "./utils";
 import {
 	Container,
@@ -31,7 +31,7 @@ class LoginPage extends Component {
 		};
 	};
 	handleSubmit = () => {
-		fetch(settings.apiServer + `/users/login`, {
+		fetch(process.env.REACT_APP_API_URL + `/users/login`, {
 			method: "POST",
 			body: JSON.stringify(this.state.input),
 			headers: {
@@ -41,7 +41,7 @@ class LoginPage extends Component {
 			.then(res => res.json())
 			.then(data => {
 				//아주 위험한 행위지만 일당 쿠키 그냥 박음
-				alert(data.token);
+				// alert(data.token);
 				document.cookie = "token=" + data.token;
 				this.props.login(utils.parseJwt(data.token));
 				window.location.href = "/";
@@ -63,7 +63,7 @@ class LoginPage extends Component {
 					</Col>
 				</Row>
 				<Form
-					action={settings.apiServer + "/users/login"}
+					action={process.env.REACT_APP_API_URL + "/users/login"}
 					method="post"
 					id="loginForm">
 					<FormGroup>

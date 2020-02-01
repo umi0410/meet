@@ -4,6 +4,7 @@ import logo from "../logo.svg";
 import "../App.css";
 import "../fonts.css";
 import "bootstrap/dist/css/bootstrap.css";
+import "./MessageBox.css";
 import { BrowserRouter } from "react-router-dom";
 import {
 	Button,
@@ -31,19 +32,7 @@ const MessageBoxPartner = props => {
 			</Col>
 			<Col xs="10" className="pl-0">
 				<div>{props.message.sender.nickname}</div>
-				<div
-					style={{
-						width: "fit-content",
-						maxWidth: "90%",
-						background: "white",
-						border: "1px solid #f8f8f8",
-						padding: "5px",
-						wordBreak: "break-all",
-						boxShadow: "0px 0px 8px 3px lightgray",
-						borderRadius: "8px"
-					}}>
-					{props.message.data}
-				</div>
+				<div className="partner-message-box">{props.message.data}</div>
 			</Col>
 		</Row>
 	);

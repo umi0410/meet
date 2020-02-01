@@ -8,7 +8,7 @@ import "../fonts.css";
 import "bootstrap/dist/css/bootstrap.css";
 import AnimateHeight from "react-animate-height";
 import utils from "../utils";
-import settings from "../settings";
+
 import {
 	Button,
 	Collapse,
@@ -60,29 +60,33 @@ class MessengerDetail extends Component {
 			message: this.state.input.message
 		});
 	};
-
+	addMessage = message => {
+		let messages = [...this.state.messages];
+		messages.push(message);
+		this.setState({
+			...this.state,
+			messages: messages
+		});
+	};
 	handleAddingMessage = e => {
 		let socket = this.props.user.socket;
-		socket.on("sentMessage", message => {
-			console.log("sentMessage");
-			console.log(message);
-			let messages = [...this.state.messages];
-			messages.push(message);
-			this.setState({
-				...this.state,
-				messages: messages
-			});
-		});
+
+		socket.on("sentMessage", this.addMessage);
+		socket.on("receiveMessage", this.addMessage);
 	};
 
 	componentDidMount() {
-		fetch(settings.apiServer + `/matches/${this.props.user.chatRoom._id}`, {
-			method: "get",
-			headers: {
-				"Content-Type": "application/json",
-				"x-access-token": utils.extractCookies("token")
+		fetch(
+			process.env.REACT_APP_API_URL +
+				`/matches/${this.props.user.chatRoom._id}`,
+			{
+				method: "get",
+				headers: {
+					"Content-Type": "application/json",
+					"x-access-token": utils.extractCookies("token")
+				}
 			}
-		})
+		)
 			.then(res => {
 				return res.json();
 			})
