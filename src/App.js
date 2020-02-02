@@ -8,6 +8,7 @@ import "./fonts.css";
 import "bootstrap/dist/css/bootstrap.css";
 // import "./chat";
 import { Route, BrowserRouter } from "react-router-dom";
+import AdSense from "react-adsense";
 import {
 	Button,
 	Collapse,
@@ -39,6 +40,7 @@ class App extends Component {
 	state = {};
 	componentDidMount() {
 		let tokenDecoded;
+		//cookie가 있는지 매번 확인하고, 로그인 정보를 redux store에 넣고, socket 연결
 		if (document.cookie) {
 			if (utils.extractCookies("token")) {
 				//componentDidMount에서는 redux를 통한 props를 이용할 수 없는듯.
@@ -80,6 +82,10 @@ class App extends Component {
 
 				{/* Navbar 때문에 자리 채우기 */}
 				<div style={{ width: "90%", height: "70px" }}></div>
+				<AdSense.Google
+					client="ca-pub-7292810486004926"
+					slot="7806394673"
+				/>
 				<BrowserRouter>
 					<Route
 						exact
