@@ -82,10 +82,11 @@ class App extends Component {
 
 				{/* Navbar 때문에 자리 채우기 */}
 				<div style={{ width: "90%", height: "70px" }}></div>
-				<AdSense.Google
+				{/* Google Adsense */}
+				{/* <AdSense.Google
 					client="ca-pub-7292810486004926"
 					slot="7806394673"
-				/>
+				/> */}
 				<BrowserRouter>
 					<Route
 						exact

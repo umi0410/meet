@@ -121,11 +121,13 @@ class MessengerDetail extends Component {
 							) {
 								return (
 									<MessageBoxMe
+										key={message._id}
 										message={message}></MessageBoxMe>
 								);
 							} else {
 								return (
 									<MessageBoxPartner
+										key={message._id}
 										message={message}></MessageBoxPartner>
 								);
 							}
@@ -135,7 +137,9 @@ class MessengerDetail extends Component {
 					<Container fluid={true}>
 						<Form>
 							<Container fluid={true}>
-								<FormGroup row class="justify-content-center">
+								<FormGroup
+									row
+									className="justify-content-center">
 									<Col xs="9" className="pl-0">
 										<Input
 											type="textarea"

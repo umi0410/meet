@@ -3,6 +3,7 @@
 import React, { useState, Component } from "react";
 import { connect } from "react-redux";
 import { login, getAccount, setChatRoom } from "../store/modules/user";
+
 import logo from "../logo.svg";
 import "../App.css";
 import "../fonts.css";
@@ -371,7 +372,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 	login: account => dispatch(login(account)),
 	getAccount: () => dispatch(getAccount()),
-	setChatRoom: chatRoom => dispatch(setChatRoom(chatRoom))
+	setChatRoom: chatRoom => dispatch(setChatRoom(chatRoom)),
+	setMeetingPartner: partner => dispatch(setMeetingPartner(partner))
 });
 
 // 컴포넌트에 리덕스 스토어를 연동해줄 때에는 connect 함수 사용
