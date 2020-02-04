@@ -28,7 +28,7 @@ import {
 	Fade
 } from "reactstrap";
 import FadeIn from "react-fade-in";
-import ProfileComponent from "../ProfileComponent";
+import ProfileComponent from "../Profile/ProfileComponent";
 import MeetingNoMeeting from "./MeetingNoMeeting";
 class MeetingPage extends Component {
 	constructor(props) {
@@ -155,7 +155,10 @@ class MeetingPage extends Component {
 								</Col>
 							</Row>
 						</Container>
-						<ProfileComponent></ProfileComponent>
+						<ProfileComponent
+							user={
+								this.props.meeting.partner
+							}></ProfileComponent>
 					</React.Fragment>
 				) : (
 					<MeetingNoMeeting></MeetingNoMeeting>

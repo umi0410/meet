@@ -60,39 +60,44 @@ class MeetingSetting extends Component {
 				return res.json();
 			})
 			.then(data => {
-				//전체 tag와 나의 tag 비교
-				let tags = this.state.tags;
-				for (let tag of tags) {
-					//myTag는 그냥 태그임
-					let isLiked = data.likes.find(myTag => {
-						if (myTag == tag.tag) {
-							//얕은 복사라 가능할듯.
-							console.log("liked", tag.tag);
-							return true;
-						}
-					});
-					if (isLiked) tag.status = 1;
-					let isHated = data.hates.find(myTag => {
-						if (myTag == tag.tag) {
-							//얕은 복사라 가능할듯.
-							return true;
-						}
-					});
-					if (isHated) tag.status = 2;
-				}
+				let partner = data.user;
+				if (data.status == "success") {
+					//전체 tag와 나의 tag 비교
+					let tags = this.state.tags;
+					for (let tag of tags) {
+						//myTag는 그냥 태그임
+						let isLiked = partner.likes.find(myTag => {
+							if (myTag == tag.tag) {
+								//얕은 복사라 가능할듯.
+								console.log("liked", tag.tag);
+								return true;
+							}
+						});
+						if (isLiked) tag.status = 1;
+						let isHated = partner.hates.find(myTag => {
+							if (myTag == tag.tag) {
+								//얕은 복사라 가능할듯.
+								return true;
+							}
+						});
+						if (isHated) tag.status = 2;
+					}
 
-				// 전체 questions와 user가 답변한 questions 비교
-				let questions = this.state.questions;
-				for (let question of questions) {
-					let isAnswered = data.questions.forEach((myQuestion, i) => {
-						if (myQuestion.title == question.title) {
-							question.answer = myQuestion.answer;
-						}
-					});
-				}
+					// 전체 questions와 user가 답변한 questions 비교
+					let questions = this.state.questions;
+					for (let question of questions) {
+						let isAnswered = partner.questions.forEach(
+							(myQuestion, i) => {
+								if (myQuestion.title == question.title) {
+									question.answer = myQuestion.answer;
+								}
+							}
+						);
+					}
 
-				//나의 questions 와 tags 를 적용시킨 값을 state에 반영
-				this.setState({ ...this.state, tags, questions });
+					//나의 questions 와 tags 를 적용시킨 값을 state에 반영
+					this.setState({ ...this.state, tags, questions });
+				} else alert(data.status);
 			})
 			.catch(err => {
 				console.error("Error:", err);

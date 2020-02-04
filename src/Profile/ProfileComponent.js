@@ -1,15 +1,12 @@
 /* eslint-disable*/
 import React, { useState, Component } from "react";
-import { connect } from "react-redux";
-import { login, getAccount } from "./store/modules/user";
-import { setMeetingPartner } from "./store/modules/meeting";
-import logo from "./logo.svg";
+import logo from "../logo.svg";
 
-import utils from "./utils";
-import "./App.css";
-import "./fonts.css";
-import "./fade.css";
-import "./MeetingPage/Meeting.css";
+import utils from "../utils";
+import "../App.css";
+import "../fonts.css";
+import "../fade.css";
+import "../MeetingPage/Meeting.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter } from "react-router-dom";
 import {
@@ -31,6 +28,7 @@ import FadeIn from "react-fade-in";
 class ProfileComponent extends Component {
 	constructor(props) {
 		super(props);
+		console.log(props);
 		// 아래 state는 props가 된다.
 		// this.state = { partner: { likes: [], hates: [], questions: [] } };
 	}
@@ -43,31 +41,6 @@ class ProfileComponent extends Component {
 			<React.Fragment>
 				{/* Main introducing */}
 
-				{/* fixed picker */}
-				<Container
-					fluid={true}
-					style={{
-						position: "fixed",
-						bottom: "20px",
-						zIndex: "999"
-					}}>
-					<Row className="justify-content-center" style={{}}>
-						<Col>
-							<Button
-								style={{ opacity: "0.6" }}
-								className="float-right">
-								Hate
-							</Button>
-						</Col>
-						<Col>
-							<Button
-								style={{ opacity: "0.6" }}
-								onClick={this.handleLike}>
-								Like
-							</Button>
-						</Col>
-					</Row>
-				</Container>
 				{/* profile starts */}
 				<Container fluid={true} className="mt-2">
 					<Badge color="warning" className="mr-1">
@@ -83,14 +56,12 @@ class ProfileComponent extends Component {
 									fontWeight: "bold",
 									fontSize: "1.2rem"
 								}}>
-								{this.props.meeting.partner.nickname}
+								{this.props.user.nickname}
 							</span>
 							, 24
 							<br></br>
 							<p>
-								<span>
-									{this.props.meeting.partner.university}{" "}
-								</span>
+								<span>{this.props.user.university} </span>
 								<span style={{ color: "gray" }}>
 									컴퓨터 공학과
 								</span>
@@ -113,7 +84,7 @@ class ProfileComponent extends Component {
 								style={{ width: "100%" }}></img>
 						</Col>
 						<Col size="10" className="mt-2">
-							<p>{this.props.meeting.partner.profileMessage}</p>
+							<p>{this.props.user.profileMessage}</p>
 						</Col>
 						<Col xs="1" className="m-1 p-0">
 							<img
@@ -139,7 +110,7 @@ class ProfileComponent extends Component {
 						<Row>
 							<Col>
 								<h4>
-									{this.props.meeting.partner.likes.map(
+									{this.props.user.likes.map(
 										(like, index) => {
 											return (
 												<Badge
@@ -173,7 +144,7 @@ class ProfileComponent extends Component {
 						<Row>
 							<Col>
 								<h4>
-									{this.props.meeting.partner.hates.map(
+									{this.props.user.hates.map(
 										(hate, index) => {
 											return (
 												<Badge
@@ -200,50 +171,31 @@ class ProfileComponent extends Component {
 						}}
 						className="pt-3 pb-3">
 						{/* Row가 한 Card */}
-						{this.props.meeting.partner.questions.map(
-							(question, index) => (
-								<Row
-									className="pt-2 pb-2 mr-0 ml-0"
-									key={index}>
-									<Col
-										xs="10"
-										className="m-auto"
+						{this.props.user.questions.map((question, index) => (
+							<Row className="pt-2 pb-2 mr-0 ml-0" key={index}>
+								<Col
+									xs="10"
+									className="m-auto"
+									style={{
+										borderRadius: "8px",
+										background: "white",
+										boxShadow: "0px 0px 23px 1px lightgray"
+									}}>
+									<p
 										style={{
-											borderRadius: "8px",
-											background: "white",
-											boxShadow:
-												"0px 0px 23px 1px lightgray"
+											borderBottom: "1px solid lightgray"
 										}}>
-										<p
-											style={{
-												borderBottom:
-													"1px solid lightgray"
-											}}>
-											{question.title}
-										</p>
-										<p>- {question.answer}</p>
-									</Col>
-								</Row>
-							)
-						)}
+										{question.title}
+									</p>
+									<p>- {question.answer}</p>
+								</Col>
+							</Row>
+						))}
 					</div>
 				</Container>
 			</React.Fragment>
 		);
 	}
 }
-// props 로 넣어줄 스토어 상태값
-const mapStateToProps = state => {
-	return {
-		...state
-	};
-};
-const mapDispatchToProps = dispatch => ({
-	login: account => dispatch(login(account)),
-	getAccount: () => dispatch(getAccount()),
-	setChatRoom: chatRoom => dispatch(setChatRoom(chatRoom)),
-	setMeetingPartner: partner => dispatch(setMeetingPartner(partner))
-});
-
 // 컴포넌트에 리덕스 스토어를 연동해줄 때에는 connect 함수 사용
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileComponent);
+export default ProfileComponent;

@@ -27,8 +27,10 @@ import {
 	Fade
 } from "reactstrap";
 class MessengerList extends Component {
-	state = { matches: [] };
-	componentDidMount() {
+	constructor(props) {
+		super(props);
+		this.state = { matches: [] };
+		console.log("componentDidMount");
 		fetch(process.env.REACT_APP_API_URL + `/matches`, {
 			method: "get",
 			headers: {
@@ -40,11 +42,13 @@ class MessengerList extends Component {
 				return res.json();
 			})
 			.then(data => {
+				console.log(data);
 				//아주 위험한 행위지만 일당 쿠키 그냥 박음
 				this.setState({ ...this.state, matches: data });
 			})
 			.catch(err => {
 				console.error("Error:", err);
+				console.log(err);
 				alert(
 					"로그인 정보가 올바르지 않습니다.\n확인하고 다시 시도해주세요."
 				);
@@ -53,12 +57,13 @@ class MessengerList extends Component {
 	render() {
 		//만약 chatRoom 정보가 있다면 MessengerDetail
 		if (this.props.user.chatRoom) {
+			console.log("chatroom");
 			return <MessengerDetail></MessengerDetail>;
 		}
 		return (
 			<React.Fragment>
 				<Container fluid={true} style={{ minHeight: "80vw" }}>
-					{this.state.matches.map(match => {
+					{this.state.matches.map((match, index) => {
 						//만약 participants[0] 이 내 nickname과 같ㅇ면 [1]이 상대,
 						//다르면 [0]이 상대
 						let partner =
@@ -68,7 +73,7 @@ class MessengerList extends Component {
 								: match.participants[0];
 						return (
 							<Row
-								key={partner._id}
+								key={index}
 								style={{
 									background: "#white",
 									borderBottom: "1px solid gray"
@@ -79,7 +84,7 @@ class MessengerList extends Component {
 										src="/profile.png"
 										style={{ width: "100%" }}
 										onClick={() => {
-											window.location.href = "/home";
+											window.location.href = `/profile/${partner._id}`;
 										}}></img>
 								</Col>
 								<Col

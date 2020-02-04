@@ -35,9 +35,10 @@ import MessengerDetail from "./Messenger/MessengerDetail";
 import MessengerList from "./Messenger/MessengerList";
 import MeetingPage from "./MeetingPage/MeetingPage";
 import MeetingSetting from "./MeetingSetting/MeetingSetting";
+import ProfilePage from "./Profile/ProfilePage";
 
 class App extends Component {
-	state = {};
+	state = { userToRead: {} };
 	componentDidMount() {
 		let tokenDecoded;
 		//cookie가 있는지 매번 확인하고, 로그인 정보를 redux store에 넣고, socket 연결
@@ -72,7 +73,12 @@ class App extends Component {
 		//     $('#messages').append($('<li>').text(msg));
 		//   });
 	}
-
+	loadProfilePage = event => {};
+	setUserToRead = _id => {
+		console.log(_id);
+		this.setState({ ...this.state, userToRead: { _id } });
+		window.location.href = "/profile";
+	};
 	render() {
 		return (
 			<div>
@@ -111,11 +117,16 @@ class App extends Component {
 					<Route
 						exact
 						path="/messenger-list"
-						component={MessengerList}
-						component={() => (
-							<MessengerList
-								socket={this.state.socket}></MessengerList>
-						)}></Route>
+						component={() => {
+							return (
+								<MessengerList socket={this.state.socket}>
+									)}
+								</MessengerList>
+							);
+						}}></Route>
+					<Route
+						path="/profile/:userIdToRead"
+						component={ProfilePage}></Route>
 					{/* ></Route> */}
 					<Route
 						exact
