@@ -22,7 +22,8 @@ import {
 	Row,
 	Col,
 	Badge,
-	Fade
+	Fade,
+	Spinner
 } from "reactstrap";
 import FadeIn from "react-fade-in";
 import ProfileComponent from "../Profile/ProfileComponent";
@@ -75,7 +76,20 @@ class ProfilePage extends Component {
 		const hatesColor = "#3e5375";
 		if (this.state.status === "loading") {
 			console.log(this.props);
-			return <h1>Loading...</h1>;
+			return (
+				<Row className="justify-content-center">
+					<Col xs="6" style={{ textAlign: "center" }}>
+						<Spinner
+							color="secondary"
+							style={{
+								width: "5rem",
+								height: "5rem",
+								marginTop: "150px",
+								marginBottom: "150px"
+							}}></Spinner>
+					</Col>
+				</Row>
+			);
 		} else if (this.state.status === "success") {
 			return (
 				<React.Fragment>

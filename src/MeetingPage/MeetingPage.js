@@ -25,7 +25,8 @@ import {
 	Row,
 	Col,
 	Badge,
-	Fade
+	Fade,
+	Spinner
 } from "reactstrap";
 import FadeIn from "react-fade-in";
 import ProfileComponent from "../Profile/ProfileComponent";
@@ -33,7 +34,8 @@ import MeetingNoMeeting from "./MeetingNoMeeting";
 class MeetingPage extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		//loading, completed
+		this.state = { status: "loading" };
 	}
 
 	getMatch = () => {
@@ -51,8 +53,9 @@ class MeetingPage extends Component {
 				console.log(data);
 				//지금은 임의로 MeetingNoMeeing 제공
 				// this.props.setNoMeeting();
-				if (data.status === "newMeeting") {
+				if (data.status === "success") {
 					this.props.setMeetingPartner(data.partner);
+					this.setState({ ...this.state, status: "completed" });
 				}
 			})
 			.catch(err => {
@@ -103,68 +106,86 @@ class MeetingPage extends Component {
 	render() {
 		const likesColor = "#f26666";
 		const hatesColor = "#3e5375";
-		return (
-			<React.Fragment>
-				{/* Main introducing */}
-
-				{this.props.meeting.partner._id ? (
-					<React.Fragment>
-						{/* fixed picker */}
-						<Container
-							fluid={true}
+		if (this.state.status == "loading") {
+			return (
+				<Row className="justify-content-center">
+					<Col xs="6" style={{ textAlign: "center" }}>
+						<Spinner
+							color="secondary"
 							style={{
-								position: "fixed",
-								bottom: "20px",
-								zIndex: "999"
-							}}>
-							<Row className="justify-content-center" style={{}}>
-								<Col>
-									<Button
-										style={{ opacity: "0.6" }}
-										className="float-right">
-										Hate
-									</Button>
-								</Col>
-								<Col>
-									<Button
-										style={{ opacity: "0.6" }}
-										onClick={this.handleLike}>
-										Like
-									</Button>
-								</Col>
-							</Row>
-						</Container>
+								width: "5rem",
+								height: "5rem",
+								marginTop: "150px",
+								marginBottom: "150px"
+							}}></Spinner>
+					</Col>
+				</Row>
+			);
+		} else if (this.state.status == "completed") {
+			return (
+				<React.Fragment>
+					{/* Main introducing */}
+					{this.props.meeting.partner._id ? (
+						<React.Fragment>
+							{/* fixed picker */}
+							<Container
+								fluid={true}
+								style={{
+									position: "fixed",
+									bottom: "20px",
+									zIndex: "999"
+								}}>
+								<Row
+									className="justify-content-center"
+									style={{}}>
+									<Col>
+										<Button
+											style={{ opacity: "0.6" }}
+											className="float-right">
+											Hate
+										</Button>
+									</Col>
+									<Col>
+										<Button
+											style={{ opacity: "0.6" }}
+											onClick={this.handleLike}>
+											Like
+										</Button>
+									</Col>
+								</Row>
+							</Container>
 
-						{/* 임시로 NoMeeting Component 불러오기 */}
-						<Container
-							fluid={true}
-							style={{
-								position: "fixed",
-								bottom: "0",
-								zIndex: "999"
-							}}>
-							<Row className="justify-content-center">
-								<Col xs="10">
-									<Button
-										block
-										onClick={() => {
-											this.props.setNoMeeting();
-										}}>
-										Dev-No Meeting
-									</Button>
-								</Col>
-							</Row>
-						</Container>
-						<ProfileComponent
-							user={
-								this.props.meeting.partner
-							}></ProfileComponent>
-					</React.Fragment>
-				) : (
-					<MeetingNoMeeting></MeetingNoMeeting>
-				)}
-			</React.Fragment>
-		);
+							{/* 임시로 NoMeeting Component 불러오기 */}
+							<Container
+								fluid={true}
+								style={{
+									position: "fixed",
+									bottom: "0",
+									zIndex: "999"
+								}}>
+								<Row className="justify-content-center">
+									<Col xs="10">
+										<Button
+											block
+											onClick={() => {
+												this.props.setNoMeeting();
+											}}>
+											Dev-No Meeting
+										</Button>
+									</Col>
+								</Row>
+							</Container>
+							<ProfileComponent
+								user={
+									this.props.meeting.partner
+								}></ProfileComponent>
+						</React.Fragment>
+					) : (
+						<MeetingNoMeeting></MeetingNoMeeting>
+					)}
+				</React.Fragment>
+			);
+		}
 	}
 }
 // props 로 넣어줄 스토어 상태값
