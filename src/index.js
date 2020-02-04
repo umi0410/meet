@@ -10,7 +10,7 @@ import rootReducer from "./store/modules";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { subscribeUser } from "./subscription";
+import { subscribeUser, showNotification } from "./subscription";
 require("dotenv").config();
 const devTools =
 	window.__REDUX_DEVTOOLS_EXTENSION__ &&
@@ -33,3 +33,5 @@ ReactDOM.render(
 //for pwa, register()
 serviceWorker.register();
 subscribeUser();
+// showNotification();
+//

@@ -1,3 +1,4 @@
+import utils from "./utils";
 const convertedVapidKey = urlBase64ToUint8Array(
 	process.env.REACT_APP_PUBLIC_VAPID_KEY
 );
@@ -21,13 +22,17 @@ function urlBase64ToUint8Array(base64String) {
 function sendSubscription(subscription) {
 	subscription = JSON.parse(JSON.stringify(subscription));
 	subscription.data = { email: "essence0410@khu.ac.kr" };
-	return fetch(`${process.env.REACT_APP_API_URL}/notifications/subscribe`, {
-		method: "POST",
-		body: JSON.stringify(subscription),
-		headers: {
-			"Content-Type": "application/json"
+	return fetch(
+		`${process.env.REACT_APP_API_URL}/push/notifications/subscribe`,
+		{
+			method: "POST",
+			body: JSON.stringify(subscription),
+			headers: {
+				"Content-Type": "application/json",
+				"x-access-token": utils.extractCookies("token")
+			}
 		}
-	});
+	);
 }
 
 export function subscribeUser() {
@@ -60,7 +65,7 @@ export function subscribeUser() {
 								})
 								.then(function(newSubscription) {
 									// console.log("New subscription added.");
-									sendSubscription(newSubscription);
+									// sendSubscription(newSubscription);
 								})
 								.catch(function(e) {
 									if (Notification.permission !== "granted") {
@@ -80,6 +85,25 @@ export function subscribeUser() {
 							sendSubscription(existedSubscription);
 						}
 					});
+			})
+			.catch(function(e) {
+				console.error(
+					"An error ocurred during Service Worker registration.",
+					e
+				);
+			});
+	}
+}
+
+export function showNotification(title, options) {
+	if ("serviceWorker" in navigator) {
+		navigator.serviceWorker.ready
+			.then(function(registration) {
+				if (!registration.pushManager) {
+					console.log("Push manager unavailable.");
+					return;
+				}
+				registration.showNotification(title, options);
 			})
 			.catch(function(e) {
 				console.error(

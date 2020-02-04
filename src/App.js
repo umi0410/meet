@@ -6,6 +6,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import "./fonts.css";
 import "bootstrap/dist/css/bootstrap.css";
+import { showNotification } from "./subscription";
 // import "./chat";
 import { Route, BrowserRouter } from "react-router-dom";
 import AdSense from "react-adsense";
@@ -38,8 +39,17 @@ import MeetingSetting from "./MeetingSetting/MeetingSetting";
 import ProfilePage from "./Profile/ProfilePage";
 
 class App extends Component {
-	state = { userToRead: {} };
+	constructor(props) {
+		super(props);
+		this.state = { isUserFocused: true };
+	}
+
+	// componentWillMount() {
+	// 	window.removeEventListener("focus", this.handleApplicationFocus);
+	// }
 	componentDidMount() {
+		window.addEventListener("focus", this.handleApplicationFocus);
+		window.addEventListener("blur", this.handleApplicationFocus);
 		let tokenDecoded;
 		//cookie가 있는지 매번 확인하고, 로그인 정보를 redux store에 넣고, socket 연결
 		if (document.cookie) {
@@ -60,15 +70,31 @@ class App extends Component {
 				socket.on("connect", function(data) {
 					console.log("Connected...");
 				});
-				socket.on("receiveMessage", function(data) {
+
+				//receiveMessage는 유저가 창을 띄운 경우에는 alert
+				//창을 안 띄운 경우에는 푸시가 아니라 자발적으로 Notification
+				socket.on("receiveMessage", data => {
 					// console.log(data);
-					console.log(
-						`${data.sender.nickname}으로 부터 메시지 도착\n>  ${data.data}`
-					);
+					//
+					if (this.state.isUserFocused)
+						alert(
+							`${data.sender.nickname}으로부터 메시지 도착\n>  ${data.data}`
+						);
+					else {
+						// showNotification in subscription.js
+						showNotification(
+							`From ${data.sender.nickname}으로부터 메시지 도착`,
+							{
+								body: data.data
+							}
+						);
+					}
 				});
 			}
 		}
-
+		setInterval(() => {
+			console.log(this.state.isUserFocused);
+		}, 1000);
 		//   socket.on('chat message', function(msg){
 		//     $('#messages').append($('<li>').text(msg));
 		//   });
@@ -78,6 +104,13 @@ class App extends Component {
 		console.log(_id);
 		this.setState({ ...this.state, userToRead: { _id } });
 		window.location.href = "/profile";
+	};
+	handleApplicationFocus = e => {
+		if (e.type == "focus")
+			this.setState({ ...this.state, isUserFocused: true });
+		else if (e.type == "blur")
+			this.setState({ ...this.state, isUserFocused: false });
+		console.log(e);
 	};
 	render() {
 		return (
