@@ -79,10 +79,16 @@ const AppBar = props => {
 				Jinting
 			</NavbarBrand>
 			<Button
+				style={{
+					background: "transparent",
+					border: "0px",
+					width: "50px",
+					padding: "5px"
+				}}
 				onClick={() => {
 					window.location.href = "/messenger-list";
 				}}>
-				Msg
+				<img style={{ width: "100%" }} src="/email.png"></img>
 			</Button>
 		</Navbar>
 	);

@@ -1,4 +1,5 @@
 /* eslint-disable*/
+
 import React, { useState, Component } from "react";
 import { connect } from "react-redux";
 import { login, getAccount } from "./store/modules/user";
@@ -6,7 +7,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import "./fonts.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { showNotification } from "./subscription";
+// import { showNotification } from "./subscription";
 // import "./chat";
 import { Route, BrowserRouter } from "react-router-dom";
 import AdSense from "react-adsense";
@@ -41,13 +42,25 @@ import ProfilePage from "./Profile/ProfilePage";
 class App extends Component {
 	constructor(props) {
 		super(props);
-		this.state = { isUserFocused: true };
+		this.state = { isScreenVisible: true };
 	}
 
 	// componentWillMount() {
 	// 	window.removeEventListener("focus", this.handleApplicationFocus);
 	// }
 	componentDidMount() {
+		document.addEventListener(
+			"visibilitychange",
+			() => {
+				if (document.hidden) {
+					this.setState({ ...this.state, isScreenVisible: false });
+				} else {
+					this.setState({ ...this.state, isScreenVisible: true });
+				}
+			},
+			false
+		);
+
 		window.addEventListener("focus", this.handleApplicationFocus);
 		window.addEventListener("blur", this.handleApplicationFocus);
 		let tokenDecoded;
@@ -76,25 +89,37 @@ class App extends Component {
 				socket.on("receiveMessage", data => {
 					// console.log(data);
 					//
-					if (this.state.isUserFocused)
+					if (this.state.isScreenVisible)
 						alert(
 							`${data.sender.nickname}으로부터 메시지 도착\n>  ${data.data}`
 						);
 					else {
-						// showNotification in subscription.js
-						showNotification(
-							`From ${data.sender.nickname}으로부터 메시지 도착`,
-							{
-								body: data.data
-							}
-						);
+						console.log(`"serviceWorker" in navigator`);
+						console.log("serviceWorker" in navigator);
+						if ("serviceWorker" in navigator) {
+							//navigator.serviceWorker.ready 이후 showNotification은 원래 기본적인 service worker
+							//Notification은 Firebase 의 service worker.
+							new Notification(
+								data.sender.nickname + "으로 부터 메시지",
+								{
+									body: data.data,
+									//이미지 어떻게 넣냐..
+									imageUrl:
+										"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg",
+									icon:
+										"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg",
+									image:
+										"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg"
+								}
+							);
+						}
 					}
 				});
 			}
 		}
-		setInterval(() => {
-			console.log(this.state.isUserFocused);
-		}, 1000);
+		// setInterval(() => {
+		// 	console.log(this.state.isScreenVisible);
+		// }, 1000);
 		//   socket.on('chat message', function(msg){
 		//     $('#messages').append($('<li>').text(msg));
 		//   });
@@ -107,10 +132,10 @@ class App extends Component {
 	};
 	handleApplicationFocus = e => {
 		if (e.type == "focus")
-			this.setState({ ...this.state, isUserFocused: true });
+			this.setState({ ...this.state, isScreenVisible: true });
 		else if (e.type == "blur")
-			this.setState({ ...this.state, isUserFocused: false });
-		console.log(e);
+			this.setState({ ...this.state, isScreenVisible: false });
+		// console.log(e);
 	};
 	render() {
 		return (
