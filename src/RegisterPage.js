@@ -24,6 +24,7 @@ class RegisterPage extends Component {
 			universities: {},
 			emailInput: "",
 			majorInputHeight: 0,
+			campusInputHeight: 0,
 			university: {}
 		};
 	}
@@ -57,29 +58,55 @@ class RegisterPage extends Component {
 			});
 			//발견한 경우
 			if (univ != undefined) {
-				// alert(univ.universityName)
 				if (this.state.majorInputHeight == 0) {
-					this.setState(
-						{ ...this.state, university: univ },
-						this.toggleMajorInput
-					);
+					if ("campuses" in univ) {
+						this.setState(
+							{ ...this.state, university: univ },
+							this.toggleMajorAndCampusInput
+						);
+					} else {
+						this.setState(
+							{ ...this.state, university: univ },
+							this.toggleMajorInput
+						);
+					}
 				}
 			}
 			//발견 못한 경우
 			else {
 				//원래 발견상태였다면 height!=0
 				if (this.state.majorInputHeight != 0) {
-					console.log("escaped");
-					this.setState({ ...this.state, university: {} });
-					this.toggleMajorInput();
+					console.log("campuses" in this.state.university);
+					console.log(this.state.university);
+					if (this.state.campusInputHeight != 0) {
+						this.setState(
+							{ ...this.state, university: {} },
+							this.toggleMajorAndCampusInput
+						);
+					} else {
+						this.setState(
+							{ ...this.state, university: {} },
+							this.toggleMajorInput
+						);
+					}
 				}
 			}
 		}
 	};
 	toggleMajorInput = () => {
+		console.log("only major");
 		this.setState({
 			...this.state,
 			majorInputHeight: this.state.majorInputHeight === 0 ? "auto" : 0
+		});
+	};
+	toggleMajorAndCampusInput = () => {
+		// console.log(this.state.majorInputHeight);
+		console.log("both");
+		this.setState({
+			...this.state,
+			majorInputHeight: this.state.majorInputHeight === 0 ? "auto" : 0,
+			campusInputHeight: this.state.campusInputHeight === 0 ? "auto" : 0
 		});
 	};
 	render() {
@@ -130,6 +157,23 @@ class RegisterPage extends Component {
 										(major, i) => {
 											return (
 												<option key={i}>{major}</option>
+											);
+										}
+									)}
+							</Input>
+						</AnimateHeight>
+						<AnimateHeight
+							duration={500}
+							height={this.state.campusInputHeight} // see props documentation below
+						>
+							<Input type="select" name="campus" id="campusInput">
+								{this.state.university.campuses &&
+									this.state.university.campuses.map(
+										(campus, i) => {
+											return (
+												<option key={i}>
+													{campus}
+												</option>
 											);
 										}
 									)}
