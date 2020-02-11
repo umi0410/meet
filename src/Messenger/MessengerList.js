@@ -30,7 +30,10 @@ class MessengerList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { matches: [] };
-		console.log("componentDidMount");
+		console.log(utils.extractCookies("token"));
+		console.log(process.env.REACT_APP_API_URL + `/matches`);
+	}
+	componentDidMount() {
 		fetch(process.env.REACT_APP_API_URL + `/matches`, {
 			method: "get",
 			headers: {
@@ -39,25 +42,22 @@ class MessengerList extends Component {
 			}
 		})
 			.then(res => {
+				console.log(res);
 				return res.json();
 			})
 			.then(data => {
-				console.log(data);
 				//아주 위험한 행위지만 일당 쿠키 그냥 박음
 				this.setState({ ...this.state, matches: data });
 			})
 			.catch(err => {
 				console.error("Error:", err);
 				console.log(err);
-				alert(
-					"로그인 정보가 올바르지 않습니다.\n확인하고 다시 시도해주세요."
-				);
+				// alert("상대방의 리스트를 가져오는 데에 실패했습니다.");
 			});
 	}
 	render() {
 		//만약 chatRoom 정보가 있다면 MessengerDetail
 		if (this.props.user.chatRoom) {
-			console.log("chatroom");
 			return <MessengerDetail></MessengerDetail>;
 		}
 		return (
@@ -90,7 +90,6 @@ class MessengerList extends Component {
 								<Col
 									xs="10"
 									onClick={() => {
-										// console.log(this.props.socket);
 										this.props.setChatRoom({
 											match: match,
 											partner: partner,

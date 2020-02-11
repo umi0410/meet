@@ -2,6 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import firebase from "firebase";
+
 //redux 이용하기
 import { Provider } from "react-redux";
 import { createStore } from "redux";
@@ -26,63 +27,83 @@ ReactDOM.render(
 	document.getElementById("root")
 );
 
-//index.js에서 serviceWorker가 가능한지 보고 firebase initiate
-if ("serviceWorker" in navigator) {
-	// Your web app's Firebase configuration
-	var firebaseConfig = {
-		apiKey: "AIzaSyAVOXx6_RSK2YSCse5Whk0_dPR0wlawCYo",
-		authDomain: "meet-eefdd.firebaseapp.com",
-		databaseURL: "https://meet-eefdd.firebaseio.com",
-		projectId: "meet-eefdd",
-		storageBucket: "meet-eefdd.appspot.com",
-		messagingSenderId: "175523276313",
-		appId: "1:175523276313:web:d1b0bb50f2b241aa0b2c88",
-		measurementId: "G-4ZVYJTWWCV"
-	};
-
-	firebase.initializeApp(firebaseConfig);
-	const messaging = firebase.messaging();
-
-	messaging.usePublicVapidKey(
-		"BJ1XDo_NY6jFqm1ymMnIwHJ416JNpFtORiIiSYHQTI8nK-ZXaxIEq5XW-hnax4bjjAynv1ORFZIFpojTRKsF4Do"
-	);
-	Notification.requestPermission().then(function(permission) {
-		if (permission === "granted") {
-			console.log("Notification permission granted.");
-		} else {
-			console.log("Unable to get permission to notify.");
-		}
-	});
-	messaging.onMessage(function(payload) {
-		console.log("onMessage: ", payload);
-
-		var title = payload.notification.title;
-		var options = {
-			body: payload.notification.body,
-			icon: payload.notification.image
+try {
+	// new Notification("TEST");
+	//index.js에서 serviceWorker가 가능한지 보고 firebase initiate
+	// alert("serviceWorker" in navigator);
+	if ("serviceWorker" in navigator) {
+		// Your web app's Firebase configuration
+		var firebaseConfig = {
+			apiKey: "AIzaSyAVOXx6_RSK2YSCse5Whk0_dPR0wlawCYo",
+			authDomain: "meet-eefdd.firebaseapp.com",
+			databaseURL: "https://meet-eefdd.firebaseio.com",
+			projectId: "meet-eefdd",
+			storageBucket: "meet-eefdd.appspot.com",
+			messagingSenderId: "175523276313",
+			appId: "1:175523276313:web:d1b0bb50f2b241aa0b2c88",
+			measurementId: "G-4ZVYJTWWCV"
 		};
-		var notification = new Notification("On", options);
-	});
 
-	messaging.getToken().then(token => {
-		console.log(token);
-		fetch(process.env.REACT_APP_API_URL + "/pushes", {
-			method: "post",
-			body: JSON.stringify({ pushToken: token }),
-			headers: {
-				"Content-Type": "application/json",
-				"x-access-token": utils.extractCookies("token")
+		firebase.initializeApp(firebaseConfig);
+		const messaging = firebase.messaging();
+
+		messaging.usePublicVapidKey(
+			"BJ1XDo_NY6jFqm1ymMnIwHJ416JNpFtORiIiSYHQTI8nK-ZXaxIEq5XW-hnax4bjjAynv1ORFZIFpojTRKsF4Do"
+		);
+		Notification.requestPermission().then(function(permission) {
+			if (permission === "granted") {
+				console.log("Notification permission granted.");
+			} else {
+				console.log("Unable to get permission to notify.");
 			}
-		})
-			.then(d => {
-				return d.json();
+		});
+		// messaging.onMessage(function(payload) {
+		// 	console.log("onMessage: ", payload);
+
+		// 	var title = payload.notification.title;
+		// 	var options = {
+		// 		body: payload.notification.body,
+		// 		icon: payload.notification.image
+		// 	};
+		// 	var notification = new Notification("On", options);
+		// });
+
+		messaging.getToken().then(token => {
+			console.log(token);
+			fetch(process.env.REACT_APP_API_URL + "/pushes", {
+				method: "post",
+				body: JSON.stringify({ pushToken: token }),
+				headers: {
+					"Content-Type": "application/json",
+					"x-access-token": utils.extractCookies("token")
+				}
 			})
-			.then(j => {
-				console.log(j);
-			})
-			.catch(e => {
-				console.error(e);
-			});
-	});
-} else
-	alert("serviceWorker is unavailable. Please connect to the https server");
+				.then(d => {
+					return d.json();
+				})
+				.then(j => {
+					console.log(j);
+				})
+				.catch(e => {
+					console.error(e);
+				});
+		});
+	} else
+		alert(
+			"serviceWorker is unavailable. Please connect to the https server"
+		);
+} catch (e) {
+	fetch(process.env.REACT_APP_API_URL + `/debugger/errors`, {
+		method: "POST",
+		body: JSON.stringify({ e: e }),
+		headers: {
+			"Content-Type": "application/json"
+		}
+	})
+		.then(res => res.json())
+		.then(data => {})
+		.catch(err => {
+			console.error("Error:", err);
+			alert("에러 보고 실패");
+		});
+}

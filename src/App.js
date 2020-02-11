@@ -45,9 +45,6 @@ class App extends Component {
 		this.state = { isScreenVisible: true };
 	}
 
-	// componentWillMount() {
-	// 	window.removeEventListener("focus", this.handleApplicationFocus);
-	// }
 	componentDidMount() {
 		document.addEventListener(
 			"visibilitychange",
@@ -60,7 +57,6 @@ class App extends Component {
 			},
 			false
 		);
-
 		window.addEventListener("focus", this.handleApplicationFocus);
 		window.addEventListener("blur", this.handleApplicationFocus);
 		let tokenDecoded;
@@ -97,21 +93,54 @@ class App extends Component {
 						console.log(`"serviceWorker" in navigator`);
 						console.log("serviceWorker" in navigator);
 						if ("serviceWorker" in navigator) {
+							Notification.requestPermission(function(result) {
+								if (result === "granted") {
+									console.log("granted");
+									navigator.serviceWorker.register(
+										"/custom-service-worker.js"
+									);
+									navigator.serviceWorker.ready.then(function(
+										registration
+									) {
+										console.log("reday");
+										registration.showNotification(
+											`${data.sender.nickname +
+												"sent a message"}`,
+											{
+												body: data.data,
+												icon:
+													"https://img.icons8.com/cotton/2x/like.png",
+												// vibrate: [
+												// 	200,
+												// 	100,
+												// 	200,
+												// 	100,
+												// 	200,
+												// 	100,
+												// 	200
+												// ],
+												tag: "vibration-sample"
+											}
+										);
+									});
+								}
+							});
+
 							//navigator.serviceWorker.ready 이후 showNotification은 원래 기본적인 service worker
 							//Notification은 Firebase 의 service worker.
-							new Notification(
-								data.sender.nickname + "으로 부터 메시지",
-								{
-									body: data.data,
-									//이미지 어떻게 넣냐..
-									imageUrl:
-										"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg",
-									icon:
-										"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg",
-									image:
-										"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg"
-								}
-							);
+							// new Notification(
+							// 	data.sender.nickname + "으로 부터 메시지",
+							// 	{
+							// 		body: data.data,
+							// 		//이미지 어떻게 넣냐..
+							// 		imageUrl:
+							// 			"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg",
+							// 		icon:
+							// 			"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg",
+							// 		image:
+							// 			"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg"
+							// 	}
+							// );
 						}
 					}
 				});
@@ -130,6 +159,8 @@ class App extends Component {
 		this.setState({ ...this.state, userToRead: { _id } });
 		window.location.href = "/profile";
 	};
+
+	//for desktop
 	handleApplicationFocus = e => {
 		if (e.type == "focus")
 			this.setState({ ...this.state, isScreenVisible: true });
@@ -151,6 +182,7 @@ class App extends Component {
 					client="ca-pub-7292810486004926"
 					slot="7806394673"
 				/> */}
+				<h1>{"" + this.state.isScreenVisible}</h1>
 				<BrowserRouter>
 					<Route
 						exact

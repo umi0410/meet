@@ -34,9 +34,9 @@ export function register(config) {
 
 		window.addEventListener("load", () => {
 			const swFileName =
-				process.env.NODE_ENV === "production"
-					? "service-worker.js"
-					: "custom-service-worker.js";
+				// process.env.NODE_ENV === "production"
+				// ? "service-worker.js"
+				"custom-service-worker.js";
 			//   "firebase-messaging-sw.js";
 			const swUrl = `${process.env.PUBLIC_URL}/${swFileName}`;
 			// console.log("* loading service worker");

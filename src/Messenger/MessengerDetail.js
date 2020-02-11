@@ -94,13 +94,11 @@ class MessengerDetail extends Component {
 				//아주 위험한 행위지만 일당 쿠키 그냥 박음
 				// console.log(data);
 				this.setState({ ...this.State, ...data });
-				console.log(this.state);
+				// console.log(this.state);
 			})
 			.catch(err => {
 				console.error("Error:", err);
-				alert(
-					"로그인 정보가 올바르지 않습니다.\n확인하고 다시 시도해주세요."
-				);
+				alert("대화 내용을 가져오는 데에 실패했습니다.");
 			});
 		this.handleAddingMessage();
 	}

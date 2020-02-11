@@ -60,9 +60,7 @@ class MeetingPage extends Component {
 			})
 			.catch(err => {
 				console.error("Error:", err);
-				alert(
-					"로그인 정보가 올바르지 않습니다.\n확인하고 다시 시도해주세요."
-				);
+				alert("매치를 가져오는 데에 실패했습니다.");
 			});
 	};
 	componentDidMount() {
@@ -98,9 +96,7 @@ class MeetingPage extends Component {
 			})
 			.catch(err => {
 				console.error("Error:", err);
-				alert(
-					"로그인 정보가 올바르지 않습니다.\n확인하고 다시 시도해주세요."
-				);
+				alert("상대방에게 좋아요를 보내는 데에 실패하였습니다.");
 			});
 	};
 	render() {
