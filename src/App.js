@@ -1,6 +1,6 @@
 /* eslint-disable*/
 
-import React, { useState, Component } from "react";
+import React, { useState, Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { login, getAccount } from "./store/modules/user";
 import logo from "./logo.svg";
@@ -148,75 +148,96 @@ class App extends Component {
 		// console.log(e);
 	};
 	render() {
-		return (
-			<div>
-				<AppBar user={this.props.user}></AppBar>
+		if (screen.width <= 600) {
+			// is mobile..
+			return (
+				<div>
+					<AppBar user={this.props.user}></AppBar>
 
-				{/* https://stackoverflow.com/questions/20562860/how-do-i-vertically-center-an-h1-in-a-div/20563075 */}
+					{/* https://stackoverflow.com/questions/20562860/how-do-i-vertically-center-an-h1-in-a-div/20563075 */}
 
-				{/* Navbar 때문에 자리 채우기 */}
-				<div style={{ width: "90%", height: "70px" }}></div>
-				{/* Google Adsense */}
-				{/* <AdSense.Google
-					client="ca-pub-7292810486004926"
-					slot="7806394673"
-				/> */}
-				<BrowserRouter>
-					<Route
-						exact
-						path="/"
-						component={
-							this.props.user.email ? MeetingPage : MainPage
-						}></Route>
-					<Route exact path="/login" component={LoginPage}></Route>
-					<Route
-						exact
-						path="/register"
-						component={RegisterPage}></Route>
-					<Route exact path="/mypage" component={MyPage}></Route>
-					<Route
-						exact
-						path="/meeting-page"
-						component={MeetingPage}></Route>
-					<Route
-						exact
-						path="/meeting-setting"
-						component={MeetingSetting}></Route>
-					<Route
-						exact
-						path="/messenger-list"
-						component={() => {
-							return (
-								<MessengerList socket={this.state.socket}>
-									)}
-								</MessengerList>
-							);
-						}}></Route>
-					<Route
-						path="/profile/:userIdToRead"
-						component={ProfilePage}></Route>
-					{/* ></Route> */}
-					<Route
-						exact
-						path="/messenger-detail"
-						component={MessengerDetail}></Route>
-					{/* <Route exact path="/signup" component={SignupPage}></Route> */}
-				</BrowserRouter>
+					{/* Navbar 때문에 자리 채우기 */}
+					<div style={{ width: "90%", height: "70px" }}></div>
+					{/* Google Adsense */}
+					{/* <AdSense.Google
+						client="ca-pub-7292810486004926"
+						slot="7806394673"
+					/> */}
+					<BrowserRouter>
+						<Route
+							exact
+							path="/"
+							component={
+								this.props.user.email ? MeetingPage : MainPage
+							}></Route>
+						<Route
+							exact
+							path="/login"
+							component={LoginPage}></Route>
+						<Route
+							exact
+							path="/register"
+							component={RegisterPage}></Route>
+						<Route exact path="/mypage" component={MyPage}></Route>
+						<Route
+							exact
+							path="/meeting-page"
+							component={MeetingPage}></Route>
+						<Route
+							exact
+							path="/meeting-setting"
+							component={MeetingSetting}></Route>
+						<Route
+							exact
+							path="/messenger-list"
+							component={() => {
+								return (
+									<MessengerList socket={this.state.socket}>
+										)}
+									</MessengerList>
+								);
+							}}></Route>
+						<Route
+							path="/profile/:userIdToRead"
+							component={ProfilePage}></Route>
+						{/* ></Route> */}
+						<Route
+							exact
+							path="/messenger-detail"
+							component={MessengerDetail}></Route>
+						{/* <Route exact path="/signup" component={SignupPage}></Route> */}
+					</BrowserRouter>
 
-				{/* Footer */}
+					{/* Footer */}
 
-				<BottomBar></BottomBar>
-				{/* <Container fluid={true}>
-					<Row style={{ background: "black" }} className="pt-5 pb-3">
-						<Container>
-							<p style={{ textAlign: "center", color: "white" }}>
-								Copyright reserved by umi, 2020
-							</p>
-						</Container>
-					</Row>
-				</Container> */}
-			</div>
-		);
+					<BottomBar></BottomBar>
+					{/* <Container fluid={true}>
+						<Row style={{ background: "black" }} className="pt-5 pb-3">
+							<Container>
+								<p style={{ textAlign: "center", color: "white" }}>
+									Copyright reserved by umi, 2020
+								</p>
+							</Container>
+						</Row>
+					</Container> */}
+				</div>
+			);
+		} else {
+			return (
+				<Fragment>
+					<AppBar></AppBar>
+					<div style={{ width: "90%", height: "200px" }}></div>
+					<Container>
+						<h1 style={{ textAlign: "center" }}>
+							PC 버전은 제공되지 않습니다.
+						</h1>
+						<h2 style={{ textAlign: "center", color: "gray" }}>
+							죄송하지만 모바일로 접속해주시기 바랍니다.
+						</h2>
+					</Container>
+				</Fragment>
+			);
+		}
 	}
 }
 // props 로 넣어줄 스토어 상태값
