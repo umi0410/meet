@@ -30,6 +30,7 @@ import utils from "./utils";
 
 import MainPage from "./MainPage";
 import AppBar from "./AppBar";
+import BottomBar from "./BottomBar";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import MyPage from "./MyPage";
@@ -105,7 +106,7 @@ class App extends Component {
 										console.log("reday");
 										registration.showNotification(
 											`${data.sender.nickname +
-												"sent a message"}`,
+												"  sent a message"}`,
 											{
 												body: data.data,
 												icon:
@@ -125,33 +126,11 @@ class App extends Component {
 									});
 								}
 							});
-
-							//navigator.serviceWorker.ready 이후 showNotification은 원래 기본적인 service worker
-							//Notification은 Firebase 의 service worker.
-							// new Notification(
-							// 	data.sender.nickname + "으로 부터 메시지",
-							// 	{
-							// 		body: data.data,
-							// 		//이미지 어떻게 넣냐..
-							// 		imageUrl:
-							// 			"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg",
-							// 		icon:
-							// 			"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg",
-							// 		image:
-							// 			"https://previews.123rf.com/images/avectors/avectors1803/avectors180300188/98093154-heart-logo-vector-icon-isolated-modern-abstract-line-black-heart-symbol-.jpg"
-							// 	}
-							// );
 						}
 					}
 				});
 			}
 		}
-		// setInterval(() => {
-		// 	console.log(this.state.isScreenVisible);
-		// }, 1000);
-		//   socket.on('chat message', function(msg){
-		//     $('#messages').append($('<li>').text(msg));
-		//   });
 	}
 	loadProfilePage = event => {};
 	setUserToRead = _id => {
@@ -182,7 +161,6 @@ class App extends Component {
 					client="ca-pub-7292810486004926"
 					slot="7806394673"
 				/> */}
-				<h1>{"" + this.state.isScreenVisible}</h1>
 				<BrowserRouter>
 					<Route
 						exact
@@ -226,7 +204,9 @@ class App extends Component {
 				</BrowserRouter>
 
 				{/* Footer */}
-				<Container fluid={true}>
+
+				<BottomBar></BottomBar>
+				{/* <Container fluid={true}>
 					<Row style={{ background: "black" }} className="pt-5 pb-3">
 						<Container>
 							<p style={{ textAlign: "center", color: "white" }}>
@@ -234,7 +214,7 @@ class App extends Component {
 							</p>
 						</Container>
 					</Row>
-				</Container>
+				</Container> */}
 			</div>
 		);
 	}

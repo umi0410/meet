@@ -34,6 +34,7 @@ class MessengerList extends Component {
 		console.log(process.env.REACT_APP_API_URL + `/matches`);
 	}
 	componentDidMount() {
+		console.log("Messenger list mount");
 		fetch(process.env.REACT_APP_API_URL + `/matches`, {
 			method: "get",
 			headers: {
@@ -109,7 +110,10 @@ class MessengerList extends Component {
 										</span>
 									</p>
 									<p style={{ fontSize: "0.8rem" }}>
-										{partner.profileMessage}
+										{console.log(match)}
+										{match.lastMessage
+											? match.lastMessage.data
+											: "먼저 인사해보세요."}
 									</p>
 								</Col>
 							</Row>

@@ -30,11 +30,15 @@ import MessageBoxMe from "./MessageBoxMe";
 import MessageBoxPartner from "./MessageBoxPartner";
 
 class MessengerDetail extends Component {
-	state = {
-		input: {},
-		messages: [],
-		matches: {}
-	};
+	constructor(props) {
+		super(props);
+		this.state = {
+			input: {},
+			messages: [],
+			matches: {}
+		};
+		// this.scrollToBottom();
+	}
 
 	handleInputChage = utils.handleInputChange.bind(this);
 	handleCopyMessage = () => {
@@ -46,6 +50,7 @@ class MessengerDetail extends Component {
 	};
 	sendMessage = e => {
 		e.preventDefault();
+
 		let socket = this.props.user.socket;
 		socket.emit("sendMessage", {
 			sender: {
@@ -59,23 +64,35 @@ class MessengerDetail extends Component {
 			},
 			message: this.state.input.message
 		});
+		console.log("sent");
 	};
 	addMessage = message => {
+		console.log("adding");
 		let messages = [...this.state.messages];
 		messages.push(message);
 		this.setState({
 			...this.state,
 			messages: messages
 		});
+		this.scrollToBottom();
 	};
 	handleAddingMessage = e => {
+		console.log("adding");
 		let socket = this.props.user.socket;
 
 		socket.on("sentMessage", this.addMessage);
 		socket.on("receiveMessage", this.addMessage);
 	};
 
+	scrollToBottom = e => {
+		document
+			.querySelector("#inputMessage")
+			.scrollIntoView({ behavior: "smooth" });
+	};
+
 	componentDidMount() {
+		console.log("Messenger detail mount");
+		this.handleAddingMessage();
 		fetch(
 			process.env.REACT_APP_API_URL +
 				`/matches/${this.props.user.chatRoom._id}`,
@@ -94,13 +111,12 @@ class MessengerDetail extends Component {
 				//아주 위험한 행위지만 일당 쿠키 그냥 박음
 				// console.log(data);
 				this.setState({ ...this.State, ...data });
-				// console.log(this.state);
+				document.querySelector("#inputMessage").scrollIntoView();
 			})
 			.catch(err => {
 				console.error("Error:", err);
-				alert("대화 내용을 가져오는 데에 실패했습니다.");
+				// alert("대화 내용을 가져오는 데에 실패했습니다.");
 			});
-		this.handleAddingMessage();
 	}
 	render() {
 		return (
@@ -109,8 +125,6 @@ class MessengerDetail extends Component {
 				<div style={{ background: "#f8f8f8" }}>
 					{/* 주고 받은 메시지 */}
 					<Container fluid={true}>
-						{/* 상대방 */}
-
 						{this.state.messages.map(message => {
 							//내 꺼
 							if (
@@ -131,14 +145,14 @@ class MessengerDetail extends Component {
 							}
 						})}
 					</Container>
-
+					{/* form */}
 					<Container fluid={true}>
 						<Form>
 							<Container fluid={true}>
 								<FormGroup
 									row
 									className="justify-content-center">
-									<Col xs="9" className="pl-0">
+									<Col xs="9" className="p-0">
 										<Input
 											type="textarea"
 											name="message"
@@ -147,12 +161,20 @@ class MessengerDetail extends Component {
 											onChange={this.handleInputChage(
 												"message"
 											)}
+											style={{
+												borderRadius: "8px 0px 0px 8px"
+											}}
 										/>
 									</Col>
-									<Col xs="2" className="pr-0">
+									<Col xs="3" className="p-0">
 										<Button
 											block
-											onClick={this.sendMessage}>
+											onClick={this.sendMessage}
+											style={{
+												paddingLeft: "2px",
+												paddingRight: "2px",
+												borderRadius: "0px 8px 8px 0px"
+											}}>
 											Send
 										</Button>
 									</Col>
