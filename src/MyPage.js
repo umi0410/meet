@@ -50,11 +50,17 @@ class MyPage extends Component {
 							</p>
 
 							<h6 style={{ textAlign: "center" }}>
-								<Badge
-									className="badge-secondary-outline"
-									style={{}}>
-									이메일인증
-								</Badge>
+								{this.props.user.isEmailVerified ? (
+									<Badge className="badge-success" style={{}}>
+										학교인증
+									</Badge>
+								) : (
+									<Badge
+										className="badge-secondary-outline"
+										style={{}}>
+										학교미인증
+									</Badge>
+								)}
 								<Badge className="badge-secondary-outline">
 									소개팅정보
 								</Badge>

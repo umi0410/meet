@@ -26,6 +26,7 @@ export default function user(state = initialState, action) {
 				email: action.email,
 				nickname: action.nickname,
 				university: action.university,
+				isEmailVerified: action.isEmailVerified,
 				_id: action._id
 			};
 		case GET_ACCOUNT:

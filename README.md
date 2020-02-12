@@ -1,68 +1,37 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 대학교 기반 소개팅 PWA
 
-## Available Scripts
+> 본 Repository는 주로 private 상태로 개발합니다.
+>
+> 함께 개발하는 [Express API server repository](https://github.com/umi0410/meet-api)
 
-In the project directory, you can run:
+![preview.png](preview.png)
 
-### `npm start`
+https://app.umidev.be
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 기술
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+* React를 통한 PWA
+* FCM을 통한 Push Notification
+* Socket.io를 통한 채팅 구현
+* serviceWorker을 이용한 Notification
+* S3 정적호스팅과 CloudFront, Route53를 이용한 HTTPS 정적 웹 사이트
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## 주의사항
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+.env, .env.production은 credentials s3 에 업로드해놓음.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+github에서는 제외시킬 것.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+어찌된 영문인지 얼마 전까지 잘 작동하던 도메인이 갑자기 작동하지 않네요.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Route53으로 한 2주 전에 등록했던 도메인인데 당황스럽습니다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+어떤 경우에 이런 현상이 발생할 수 있을까요?
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+평소에 콘솔창을 자세히 안 봐서 모르겠는데, 사진처럼 "등록된 도메인" 탭에 제 도메인이 뜨지 않으면 등록이 안 된 건가요? 여전히 호스팅 영역에는 등록했던 도메인 관련한 호스팅이 존재하는데, 갑자기 도메인이 제대로 작동하지 않아 당황스럽습니다... 1년치로 돈 냈는데...ㅜ.ㅜ.. 어떨 때 발생할 수 있는 현상인지 모르겠네요.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+EC2 인스턴스를 새 인스턴스로 갈아치우다가 문제를 발견했는데, 도메인에 s3와 ec2 모두 연결해놨는데, 갑자기 둘 다 작동 안하는 걸 보아 EC2 의 문제는 아닌 것 같습니다.
