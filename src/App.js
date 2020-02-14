@@ -148,7 +148,7 @@ class App extends Component {
 		// console.log(e);
 	};
 	render() {
-		if (screen.width <= 600) {
+		if (process.env.REACT_APP_MODE != "production" || screen.width <= 900) {
 			// is mobile..
 			return (
 				<div>

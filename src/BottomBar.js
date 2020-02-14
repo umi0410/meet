@@ -32,8 +32,13 @@ class BottomBar extends Component {
 					style={{
 						height: "70px",
 						borderBottom: "1px solid lightgray",
-						background: "black"
-					}}></Navbar>
+						background: "black",
+						padding: "0px"
+					}}>
+					<img
+						src="/ad_preview.png"
+						style={{ height: "70px", margin: "auto" }}></img>
+				</Navbar>
 			</Fragment>
 		);
 	}

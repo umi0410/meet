@@ -2,7 +2,7 @@
 import React, { useState, Component } from "react";
 import { connect } from "react-redux";
 import { login, getAccount } from "../store/modules/user";
-import { setMeetingPartner, setNoMeeting } from "../store/modules/meeting";
+import { setMeetingPartner } from "../store/modules/meeting";
 import logo from "../logo.svg";
 
 import utils from "../utils";
@@ -60,7 +60,8 @@ class MeetingPage extends Component {
 			})
 			.catch(err => {
 				console.error("Error:", err);
-				alert("매치를 가져오는 데에 실패했습니다.");
+				console.error("매치를 가져오는 데에 실패했습니다.");
+				this.setState({ ...this.state, status: "noCandidate" });
 			});
 	};
 	componentDidMount() {
@@ -181,6 +182,8 @@ class MeetingPage extends Component {
 					)}
 				</React.Fragment>
 			);
+		} else if (this.state.status == "noCandidate") {
+			return <MeetingNoMeeting></MeetingNoMeeting>;
 		}
 	}
 }
@@ -194,8 +197,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 	login: account => dispatch(login(account)),
 	getAccount: () => dispatch(getAccount()),
-	setMeetingPartner: partner => dispatch(setMeetingPartner(partner)),
-	setNoMeeting: () => dispatch(setNoMeeting())
+	setMeetingPartner: partner => dispatch(setMeetingPartner(partner))
 });
 
 // 컴포넌트에 리덕스 스토어를 연동해줄 때에는 connect 함수 사용

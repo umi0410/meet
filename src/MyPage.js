@@ -1,10 +1,9 @@
 /* eslint-disable*/
 import React, { useState, Component } from "react";
-import { connect } from "react-redux";
-import { login, getAccount, setChatRoom } from "./store/modules/user";
 import logo from "./logo.svg";
 import "./App.css";
 import "./fonts.css";
+import utils from "./utils"
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter } from "react-router-dom";
 import "./MyPage.css";
@@ -24,6 +23,13 @@ import {
 	Fade
 } from "reactstrap";
 class MyPage extends Component {
+	constructor(props)
+	{
+		super(props)
+		this.state=utils.extractCookies('token')
+	}
+	componentDidMount(){
+	}
 	render() {
 		const likesColor = "#f26666";
 		const hatesColor = "#3e5375";
@@ -120,17 +126,4 @@ class MyPage extends Component {
 	}
 }
 
-// props 로 넣어줄 스토어 상태값
-const mapStateToProps = state => {
-	return {
-		...state
-	};
-};
-// props 로 넣어줄 액션 생성함수
-const mapDispatchToProps = dispatch => ({
-	login: account => dispatch(login(account)),
-	getAccount: () => dispatch(getAccount()),
-	setChatRoom: chatRoom => dispatch(setChatRoom(chatRoom))
-});
-// 컴포넌트에 리덕스 스토어를 연동해줄 때에는 connect 함수 사용
-export default connect(mapStateToProps, mapDispatchToProps)(MyPage);
+export default MyPage

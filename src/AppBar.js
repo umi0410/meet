@@ -76,7 +76,7 @@ const AppBar = props => {
 				</Nav>
 			</Collapse>
 			<NavbarBrand href="/" className="m-auto">
-				Jinting
+				Jinsol
 			</NavbarBrand>
 			<Button
 				style={{
