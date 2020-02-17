@@ -48,34 +48,54 @@ const AppBar = props => {
 				}}>
 				<Nav navbar>
 					<NavItem>
-						<NavLink href="/" style={{ color: "white" }}>
+						<NavLink
+							href="/"
+							style={{ color: "white" }}
+							onClick={props.getAppModeHandler("HOME")}>
 							Home
 						</NavLink>
 					</NavItem>
 					<NavItem>
-						<NavLink href="/mypage/" style={{ color: "white" }}>
+						<NavLink
+							href="/mypage/"
+							style={{ color: "white" }}
+							onClick={props.getAppModeHandler("MYPAGE")}>
 							My page
 						</NavLink>
 					</NavItem>
 					<NavItem>
-						{props.user.email ? (
+						{props.user.isLoggedIn ? (
 							<NavLink
-								onClick={() => {
-									utils.deleteCookie("token");
-								}}
+								onClick={props.handleLogout}
 								href="/"
 								style={{ color: "white" }}>
 								Logout
 							</NavLink>
 						) : (
-							<NavLink href="/login" style={{ color: "white" }}>
-								Login
-							</NavLink>
+							<React.Fragment>
+								<NavLink
+									href="/login"
+									style={{ color: "white" }}
+									onClick={props.getAppModeHandler("LOGIN")}>
+									Login
+								</NavLink>
+								<NavLink
+									href="/register"
+									style={{ color: "white" }}
+									onClick={props.getAppModeHandler(
+										"REGISTER"
+									)}>
+									Register
+								</NavLink>
+							</React.Fragment>
 						)}
 					</NavItem>
 				</Nav>
 			</Collapse>
-			<NavbarBrand href="/" className="m-auto">
+			<NavbarBrand
+				href="/"
+				onClick={props.getAppModeHandler("HOME")}
+				className="m-auto">
 				Jinsol
 			</NavbarBrand>
 			<Button
@@ -85,23 +105,11 @@ const AppBar = props => {
 					width: "50px",
 					padding: "5px"
 				}}
-				onClick={() => {
-					window.location.href = "/messenger-list";
-				}}>
+				onClick={props.getAppModeHandler("MESSENGER_LIST")}>
 				<img style={{ width: "100%" }} src="/email.png"></img>
 			</Button>
 		</Navbar>
 	);
 };
-// props 로 넣어줄 스토어 상태값
-const mapStateToProps = state => ({
-	...state
-});
 
-// props 로 넣어줄 액션 생성함수
-const mapDispatchToProps = dispatch => ({
-	getAccount: () => dispatch(getAccount())
-});
-
-// 컴포넌트에 리덕스 스토어를 연동해줄 때에는 connect 함수 사용
-export default connect(mapStateToProps, mapDispatchToProps)(AppBar);
+export default AppBar;

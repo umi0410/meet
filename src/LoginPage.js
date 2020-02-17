@@ -47,6 +47,7 @@ class LoginPage extends Component {
 					data.token +
 					";  expires=Fri, 31 Dec 9999 23:59:59 GMT";
 				this.props.login(utils.parseJwt(data.token));
+				//그냥 location을 바꿔버림으로써 App의 constructor 소환해버리기=> 가능
 				window.location.href = "/";
 			})
 			.catch(err => {
@@ -117,9 +118,7 @@ class LoginPage extends Component {
 						<Button
 							className="m-auto"
 							size="sm"
-							onClick={() => {
-								window.location.href = "register";
-							}}>
+							onClick={this.props.getAppModeHandler("REGISTER")}>
 							회원가입
 						</Button>
 					</Row>

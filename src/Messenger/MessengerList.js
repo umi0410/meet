@@ -30,11 +30,6 @@ class MessengerList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { matches: [] };
-		console.log(utils.extractCookies("token"));
-		console.log(process.env.REACT_APP_API_URL + `/matches`);
-	}
-	componentDidMount() {
-		console.log("Messenger list mount");
 		fetch(process.env.REACT_APP_API_URL + `/matches`, {
 			method: "get",
 			headers: {
@@ -43,7 +38,7 @@ class MessengerList extends Component {
 			}
 		})
 			.then(res => {
-				console.log(res);
+				// console.log(res);
 				return res.json();
 			})
 			.then(data => {
@@ -56,6 +51,7 @@ class MessengerList extends Component {
 				// alert("상대방의 리스트를 가져오는 데에 실패했습니다.");
 			});
 	}
+	componentDidMount() {}
 	render() {
 		//만약 chatRoom 정보가 있다면 MessengerDetail
 		if (this.props.user.chatRoom) {
@@ -90,13 +86,13 @@ class MessengerList extends Component {
 								</Col>
 								<Col
 									xs="10"
-									onClick={() => {
-										this.props.setChatRoom({
+									onClick={this.props.getAppStateHandler({
+										chatRoom: {
 											match: match,
-											partner: partner,
-											socket: this.props.socket
-										});
-									}}>
+											partner: partner
+										},
+										mode: "MESSENGER_DETAIL"
+									})}>
 									<p className="mb-1">
 										<span style={{ fontWeight: "bold" }}>
 											{partner.nickname}
@@ -110,7 +106,6 @@ class MessengerList extends Component {
 										</span>
 									</p>
 									<p style={{ fontSize: "0.8rem" }}>
-										{console.log(match)}
 										{match.lastMessage
 											? match.lastMessage.data
 											: "먼저 인사해보세요."}
@@ -124,18 +119,5 @@ class MessengerList extends Component {
 		);
 	}
 }
-// props 로 넣어줄 스토어 상태값
-const mapStateToProps = state => {
-	return {
-		...state
-	};
-};
-// props 로 넣어줄 액션 생성함수
-const mapDispatchToProps = dispatch => ({
-	login: account => dispatch(login(account)),
-	getAccount: () => dispatch(getAccount()),
-	setChatRoom: chatRoom => dispatch(setChatRoom(chatRoom))
-});
-
 // 컴포넌트에 리덕스 스토어를 연동해줄 때에는 connect 함수 사용
-export default connect(mapStateToProps, mapDispatchToProps)(MessengerList);
+export default MessengerList;

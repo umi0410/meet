@@ -10,6 +10,9 @@ export const setChatRoom = chatRoom => ({ type: SET_CHAT_ROOM, ...chatRoom });
 const initialState = {
 	email: undefined,
 	nickname: undefined,
+	university: "",
+	isEmailVerified: false,
+	meetingStatus: "UNQUALIFIED",
 	totalHearts: 10,
 	currentHearts: 0,
 	userToRead: undefined
@@ -27,6 +30,7 @@ export default function user(state = initialState, action) {
 				nickname: action.nickname,
 				university: action.university,
 				isEmailVerified: action.isEmailVerified,
+				meetingStatus: action.meetingStatus,
 				_id: action._id
 			};
 		case GET_ACCOUNT:

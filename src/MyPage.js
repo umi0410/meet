@@ -3,7 +3,7 @@ import React, { useState, Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import "./fonts.css";
-import utils from "./utils"
+import utils from "./utils";
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter } from "react-router-dom";
 import "./MyPage.css";
@@ -23,13 +23,11 @@ import {
 	Fade
 } from "reactstrap";
 class MyPage extends Component {
-	constructor(props)
-	{
-		super(props)
-		this.state=utils.extractCookies('token')
+	constructor(props) {
+		super(props);
+		this.state = { token: utils.extractCookies("token") };
 	}
-	componentDidMount(){
-	}
+	componentDidMount() {}
 	render() {
 		const likesColor = "#f26666";
 		const hatesColor = "#3e5375";
@@ -52,24 +50,43 @@ class MyPage extends Component {
 										: "로그인해주세요"}
 								</span>
 								<span style={{ color: "gray" }}>님</span>
+								{this.props.user.meetingStatus ==
+									"UNQUALIFIED" && (
+									<Badge
+										className="ml-2 badge-secondary-outline"
+										style={{}}>
+										소개팅조건 미달
+									</Badge>
+								)}
+								{this.props.user.meetingStatus == "WAITING" && (
+									<Badge
+										className="ml-2  badge-success badge badge-success-outline"
+										style={{}}>
+										서비스 대기중
+									</Badge>
+								)}
+								{this.props.user.meetingStatus == "ONGOING" && (
+									<Badge
+										className="badge-secondary-outline"
+										style={{
+											border: "1px solid " + likesColor,
+											background: likesColor,
+											color: "white"
+										}}>
+										소개팅 진행
+									</Badge>
+								)}
 								<br></br>
 							</p>
 
 							<h6 style={{ textAlign: "center" }}>
-								{this.props.user.isEmailVerified ? (
-									<Badge className="badge-success" style={{}}>
-										학교인증
-									</Badge>
-								) : (
+								{!this.props.user.isEmailVerified && (
 									<Badge
 										className="badge-secondary-outline"
 										style={{}}>
-										학교미인증
+										학교메일미인증
 									</Badge>
 								)}
-								<Badge className="badge-secondary-outline">
-									소개팅정보
-								</Badge>
 								<Badge
 									className="badge-secondary-outline"
 									style={{
@@ -77,7 +94,7 @@ class MyPage extends Component {
 										background: likesColor,
 										color: "white"
 									}}>
-									우수평가
+									우수회원
 								</Badge>
 							</h6>
 							<p style={{ textAlign: "center" }}>
@@ -108,7 +125,10 @@ class MyPage extends Component {
 								<li style={{ width: "60%", margin: "auto" }}>
 									<a
 										className="mypageList"
-										href="/meeting-setting">
+										href="/meeting-setting"
+										onClick={this.props.getAppModeHandler(
+											"MEETING_SETTING"
+										)}>
 										소개팅 정보 입력
 									</a>
 								</li>
@@ -126,4 +146,4 @@ class MyPage extends Component {
 	}
 }
 
-export default MyPage
+export default MyPage;

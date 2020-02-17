@@ -56,7 +56,7 @@ class MeetingSetting extends Component {
 			}
 		)
 			.then(res => {
-				console.log(res.body);
+				// console.log(res.body);
 				return res.json();
 			})
 			.then(data => {
@@ -69,7 +69,7 @@ class MeetingSetting extends Component {
 						let isLiked = partner.likes.find(myTag => {
 							if (myTag == tag.tag) {
 								//얕은 복사라 가능할듯.
-								console.log("liked", tag.tag);
+								// console.log("liked", tag.tag);
 								return true;
 							}
 						});
@@ -112,11 +112,11 @@ class MeetingSetting extends Component {
 			}
 		})
 			.then(res => {
-				console.log(res.body);
+				// console.log(res.body);
 				return res.json();
 			})
 			.then(data => {
-				console.log(data);
+				// console.log(data);
 				let tags = [];
 				for (let tag of data) {
 					tags.push(this.tagConstructor(tag));
@@ -136,11 +136,11 @@ class MeetingSetting extends Component {
 			}
 		})
 			.then(res => {
-				console.log(res.body);
+				// console.log(res.body);
 				return res.json();
 			})
 			.then(data => {
-				console.log(data);
+				// console.log(data);
 				let questions = [];
 				for (let question of data) {
 					questions.push(
@@ -170,7 +170,7 @@ class MeetingSetting extends Component {
 
 	handleProfileMessage = e => {
 		this.setState({ ...this.state, profileMessage: e.target.value });
-		console.log(this.state);
+		// console.log(this.state);
 	};
 	//index를 적용시킨 핸들러 리턴, like인지 hate인지 전달
 	handleToggleState = index => {
@@ -186,23 +186,28 @@ class MeetingSetting extends Component {
 			//toggle, 0 notSelected, 1 liked, 2 hated
 			let questions = this.state.questions;
 			questions[index].answer = e.target.value;
-			console.log(questions[index]);
+			// console.log(questions[index]);
 			this.setState({ ...this.state, questions });
 		};
 	};
 
 	handleSubmit = e => {
-		fetch(process.env.REACT_APP_API_URL + `/users/${this.props.user._id}`, {
-			method: "PUT",
-			body: JSON.stringify(this.state),
-			headers: {
-				"Content-Type": "application/json",
-				"x-access-token": utils.extractCookies("token")
+		fetch(
+			process.env.REACT_APP_API_URL +
+				`/users/${utils.parseJwt(utils.extractCookies("token"))._id}`,
+			{
+				method: "PUT",
+				body: JSON.stringify(this.state),
+				headers: {
+					"Content-Type": "application/json",
+					"x-access-token": utils.extractCookies("token")
+				}
 			}
-		})
+		)
 			.then(res => res.json())
 			.then(data => {
 				console.log(data);
+				this.props.getAppModeHandler("MYPAGE")();
 			})
 			.catch(err => {
 				console.error("Error:", err);

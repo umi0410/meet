@@ -23,7 +23,7 @@ class BottomBar extends Component {
 		return (
 			<Fragment>
 				<div
-					class="bottom-margin-box"
+					className="bottom-margin-box"
 					style={{ height: "70px", width: "90%" }}></div>
 				<Navbar
 					color="faded"

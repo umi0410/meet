@@ -28,6 +28,7 @@ import {
 } from "reactstrap";
 import MessageBoxMe from "./MessageBoxMe";
 import MessageBoxPartner from "./MessageBoxPartner";
+import { conditionalExpression } from "@babel/types";
 
 class MessengerDetail extends Component {
 	constructor(props) {
@@ -37,7 +38,31 @@ class MessengerDetail extends Component {
 			messages: [],
 			matches: {}
 		};
-		// this.scrollToBottom();
+		this.handleAddingMessage();
+		fetch(
+			process.env.REACT_APP_API_URL +
+				`/matches/${this.props.store.chatRoom.match._id}`,
+			{
+				method: "get",
+				headers: {
+					"Content-Type": "application/json",
+					"x-access-token": utils.extractCookies("token")
+				}
+			}
+		)
+			.then(res => {
+				return res.json();
+			})
+			.then(data => {
+				this.setState({ ...this.State, ...data }, () => {
+					document.querySelector("#inputMessage").scrollIntoView();
+					// this.scrollToBottom();
+				});
+			})
+			.catch(err => {
+				console.error("Error:", err);
+				// alert("대화 내용을 가져오는 데에 실패했습니다.");
+			});
 	}
 
 	handleInputChage = utils.handleInputChange.bind(this);
@@ -51,16 +76,16 @@ class MessengerDetail extends Component {
 	sendMessage = e => {
 		e.preventDefault();
 
-		let socket = this.props.user.socket;
+		let socket = this.props.store.socket;
 		socket.emit("sendMessage", {
 			sender: {
-				_id: this.props.user._id,
-				email: this.props.user.email,
-				nickname: this.props.user.nickname
+				_id: this.props.store.user._id,
+				email: this.props.store.user.email,
+				nickname: this.props.store.user.nickname
 			},
-			recipient: this.props.user.partner,
+			recipient: this.props.store.chatRoom.partner,
 			chatRoom: {
-				_id: this.props.user.chatRoom._id
+				_id: this.props.store.chatRoom.match._id
 			},
 			message: this.state.input.message
 		});
@@ -77,8 +102,7 @@ class MessengerDetail extends Component {
 		this.scrollToBottom();
 	};
 	handleAddingMessage = e => {
-		console.log("adding");
-		let socket = this.props.user.socket;
+		let socket = this.props.store.socket;
 
 		socket.on("sentMessage", this.addMessage);
 		socket.on("receiveMessage", this.addMessage);
@@ -90,46 +114,55 @@ class MessengerDetail extends Component {
 			.scrollIntoView({ behavior: "smooth" });
 	};
 
-	componentDidMount() {
-		console.log("Messenger detail mount");
-		this.handleAddingMessage();
-		fetch(
-			process.env.REACT_APP_API_URL +
-				`/matches/${this.props.user.chatRoom._id}`,
-			{
-				method: "get",
-				headers: {
-					"Content-Type": "application/json",
-					"x-access-token": utils.extractCookies("token")
-				}
+	loadMoreMessage = () => {
+		let url = new URL(process.env.REACT_APP_API_URL + `/messages`);
+		let query = {
+			match: this.props.store.chatRoom.match._id,
+			after: this.state.messages[0]._id
+		};
+		url.search = new URLSearchParams(query).toString();
+		fetch(url, {
+			method: "get",
+			headers: {
+				"Content-Type": "application/json",
+				"x-access-token": utils.extractCookies("token")
 			}
-		)
+		})
 			.then(res => {
+				// console.log(res);
 				return res.json();
 			})
 			.then(data => {
 				//아주 위험한 행위지만 일당 쿠키 그냥 박음
-				// console.log(data);
-				this.setState({ ...this.State, ...data });
-				document.querySelector("#inputMessage").scrollIntoView();
+				this.setState({
+					...this.state,
+					messages: data.messages.concat(this.state.messages)
+				});
 			})
 			.catch(err => {
 				console.error("Error:", err);
-				// alert("대화 내용을 가져오는 데에 실패했습니다.");
+				console.log(err);
+				// alert("상대방의 리스트를 가져오는 데에 실패했습니다.");
 			});
-	}
+	};
 	render() {
 		return (
 			<React.Fragment>
-				<h1>{this.props.user.partner.nickname}</h1>
+				{/* <h1>{this.props.store.chatRoom.partner.nickname}</h1> */}
 				<div style={{ background: "#f8f8f8" }}>
 					{/* 주고 받은 메시지 */}
 					<Container fluid={true}>
+						<Row className="justify-content-center pt-2">
+							<img
+								style={{ width: "30px" }}
+								src="/up.png"
+								onClick={this.loadMoreMessage}></img>
+						</Row>
 						{this.state.messages.map(message => {
 							//내 꺼
 							if (
 								message.sender.nickname ==
-								this.props.user.nickname
+								this.props.store.user.nickname
 							) {
 								return (
 									<MessageBoxMe
@@ -195,18 +228,5 @@ class MessengerDetail extends Component {
 	}
 }
 
-// props 로 넣어줄 스토어 상태값
-const mapStateToProps = state => {
-	return {
-		...state
-	};
-};
-// props 로 넣어줄 액션 생성함수
-const mapDispatchToProps = dispatch => ({
-	login: account => dispatch(login(account)),
-	getAccount: () => dispatch(getAccount()),
-	setChatRoom: chatRoom => dispatch(setChatRoom(chatRoom))
-});
-
 // 컴포넌트에 리덕스 스토어를 연동해줄 때에는 connect 함수 사용
-export default connect(mapStateToProps, mapDispatchToProps)(MessengerDetail);
+export default MessengerDetail;
