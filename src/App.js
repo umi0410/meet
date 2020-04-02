@@ -42,6 +42,7 @@ class App extends Component {
 			isScreenVisible: true,
 			user: userInitialState,
 			chatRoom: {},
+			modeStack: [],
 			mode: "LOADING" //LOADING, HOME, PROFILE, MATCHES,CHATROOM
 		};
 		//토큰이 존재하는 경우 로그인 시도.
@@ -150,6 +151,7 @@ class App extends Component {
 	}
 
 	componentDidMount() {
+		//socket io를 이용해 알림을 받을 지, push로 알림을 받을 지에 대한 화면 포커싱 이벤트
 		document.addEventListener(
 			"visibilitychange",
 			() => {
@@ -163,6 +165,8 @@ class App extends Component {
 		);
 		window.addEventListener("focus", this.handleApplicationFocus);
 		window.addEventListener("blur", this.handleApplicationFocus);
+
+		window.addEventListener("popstate", this.getModePopper());
 	}
 	loadProfilePage = event => {};
 	setUserToRead = _id => {
@@ -200,6 +204,48 @@ class App extends Component {
 			this.setState({ ...this.state, ...state });
 		};
 	};
+	//mode 초기화
+	getModeInitializer = (mode = null) => {
+		return () => {
+			// history.replaceState([], "HOME", "/");
+			// history.pushState({}, "HOME", "/");
+
+			if (mode == null)
+				this.setState({
+					...this.state,
+					modeStack: ["HOME"],
+					mode: "HOME"
+				});
+			else {
+				this.setState({
+					...this.state,
+					modeStack: ["HOME", mode],
+					mode
+				});
+			}
+		};
+	};
+
+	getModePusher = mode => {
+		return () => {
+			this.setState({
+				...this.state,
+				modeStack: this.state.modeStack.push(mode),
+				mode
+			});
+		};
+	};
+	getModePopper = () => {
+		return e => {
+			e.preventDefault();
+			let modeStack = this.state.modeStack;
+			modeStack.pop();
+			let lastMode = modeStack[modeStack.length - 1];
+			alert("Go to ", lastMode);
+			this.setState({ ...this.state, modeStack, mode: lastMode });
+		};
+	};
+
 	render() {
 		if (process.env.REACT_APP_MODE != "production" || screen.width <= 900) {
 			// is mobile..
@@ -208,6 +254,9 @@ class App extends Component {
 					<AppBar
 						user={this.state.user}
 						getAppModeHandler={this.getAppModeHandler}
+						getModeInitializer={this.getModeInitializer}
+						getModePopper={this.getModePopper}
+						getModePusher={this.getModePusher}
 						handleLogout={this.handleLogout}></AppBar>
 					{/* https://stackoverflow.com/questions/20562860/how-do-i-vertically-center-an-h1-in-a-div/20563075 */}
 					{/* Navbar 때문에 자리 채우기 */}
@@ -283,51 +332,7 @@ class App extends Component {
 							store={this.state}></MessengerDetail>
 					)}
 					{this.state.mode == "PROILE" && <ProfilePage></ProfilePage>}
-					<BrowserRouter>
-						{/* <Route
-							exact
-							path="/mypage"
-							component={() => {
-								fetch(
-									process.env.REACT_APP_API_URL +
-										"/user/" +
-										utils.parseJwt(
-											utils.extractCookies("token")
-										)._id,
-									{
-										method: "GET",
-										headers: {
-											"Content-Type": "application/json",
-											"x-access-token": utils.extractCookies(
-												"token"
-											)
-										}
-									}
-								)
-									.then(res => res.json())
-									.then(user => {
-										return (
-											<MyPage user={this.props.user}>
-												)}
-											</MyPage>
-										);
-									})
-									.catch(err => {
-										console.error("Error:", err);
-										alert("마이페이지 로딩 실패입니다..");
-									});
-							}}></Route> */}
-						{/* <Route
-							exact
-							path="/meeting-page"
-							component={MeetingPage}></Route>
-						<Route
-							exact
-							path="/meeting-setting"
-							component={MeetingSetting}></Route> */}
 
-						{/* <Route exact path="/signup" component={SignupPage}></Route> */}
-					</BrowserRouter>
 					{/* Footer */}
 					<BottomBar></BottomBar>
 					{/* <Container fluid={true}>

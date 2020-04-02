@@ -49,17 +49,15 @@ const AppBar = props => {
 				<Nav navbar>
 					<NavItem>
 						<NavLink
-							href="/"
 							style={{ color: "white" }}
-							onClick={props.getAppModeHandler("HOME")}>
+							onClick={props.getModeInitializer()}>
 							Home
 						</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink
-							href="/mypage/"
 							style={{ color: "white" }}
-							onClick={props.getAppModeHandler("MYPAGE")}>
+							onClick={props.getModeInitializer("MYPAGE")}>
 							My page
 						</NavLink>
 					</NavItem>
