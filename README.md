@@ -6,7 +6,7 @@
 
 ![preview.png](preview.png)
 
-https://app.umidev.be
+https://app.umidev.net
 
 ## 기술
 
