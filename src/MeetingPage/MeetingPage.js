@@ -56,6 +56,8 @@ class MeetingPage extends Component {
 				if (data.status === "success") {
 					this.props.setMeetingPartner(data.partner);
 					this.setState({ ...this.state, status: "completed" });
+				} else if (data.status == "noCandidate") {
+					this.setState({ ...this.state, status: "completed" })
 				}
 			})
 			.catch(err => {
@@ -70,7 +72,7 @@ class MeetingPage extends Component {
 	handleLike = () => {
 		fetch(
 			process.env.REACT_APP_API_URL +
-				`/meetings?action=like&id=${this.props.meeting.partner._id}`,
+			`/meetings?action=like&id=${this.props.meeting.partner._id}`,
 			{
 				method: "post",
 				headers: {
@@ -88,9 +90,9 @@ class MeetingPage extends Component {
 				if (data.match) {
 					alert(
 						data.match.participants[0].nickname +
-							"님과 " +
-							data.match.participants[1].nickname +
-							"님이 연결되셨습니다.\n적극적으로먼저연락해보세요!"
+						"님과 " +
+						data.match.participants[1].nickname +
+						"님이 연결되셨습니다.\n적극적으로먼저연락해보세요!"
 					);
 				}
 				this.getMatch();
@@ -129,7 +131,7 @@ class MeetingPage extends Component {
 								fluid={true}
 								style={{
 									position: "fixed",
-									bottom: "20px",
+									bottom: "80px",
 									zIndex: "999"
 								}}>
 								<Row
@@ -178,8 +180,8 @@ class MeetingPage extends Component {
 								}></ProfileComponent>
 						</React.Fragment>
 					) : (
-						<MeetingNoMeeting></MeetingNoMeeting>
-					)}
+							<MeetingNoMeeting></MeetingNoMeeting>
+						)}
 				</React.Fragment>
 			);
 		} else if (this.state.status == "noCandidate") {

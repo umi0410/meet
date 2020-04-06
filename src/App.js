@@ -36,6 +36,7 @@ let userInitialState = {
 	_id: ""
 };
 class App extends Component {
+	DEFAULT_MODE = "REGISTER"	//개발 시 사용할 default 모드
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -43,7 +44,8 @@ class App extends Component {
 			user: userInitialState,
 			chatRoom: {},
 			modeStack: [],
-			mode: "LOADING" //LOADING, HOME, PROFILE, MATCHES,CHATROOM
+			// mode: "LOADING" //LOADING, HOME, PROFILE, MATCHES,CHATROOM
+			mode: "LOADING"
 		};
 		//토큰이 존재하는 경우 로그인 시도.
 		if (utils.extractCookies("token")) {
@@ -77,11 +79,11 @@ class App extends Component {
 						this.setState({
 							...this.state,
 							socket,
-							mode: "HOME",
+							mode: this.DEFAULT_MODE,
 							user: { ...response.user, isLoggedIn: true }
 						});
 
-						socket.on("connect", function(data) {
+						socket.on("connect", function (data) {
 							console.log("Connected...");
 						});
 
@@ -98,7 +100,7 @@ class App extends Component {
 								console.log(`"serviceWorker" in navigator`);
 								console.log("serviceWorker" in navigator);
 								if ("serviceWorker" in navigator) {
-									Notification.requestPermission(function(
+									Notification.requestPermission(function (
 										result
 									) {
 										if (result === "granted") {
@@ -107,12 +109,12 @@ class App extends Component {
 												"/custom-service-worker.js"
 											);
 											navigator.serviceWorker.ready.then(
-												function(registration) {
+												function (registration) {
 													console.log("reday");
 													registration.showNotification(
 														`${data.sender
 															.nickname +
-															"  sent a message"}`,
+														"  sent a message"}`,
 														{
 															body: data.data,
 															icon:
@@ -146,7 +148,7 @@ class App extends Component {
 			}
 		} else {
 			//토큰이 없는 경우. 즉 로그아웃 상태
-			this.state.mode = "HOME";
+			this.state.mode = this.DEFAULT_MODE;
 		}
 	}
 
@@ -168,7 +170,7 @@ class App extends Component {
 
 		window.addEventListener("popstate", this.getModePopper());
 	}
-	loadProfilePage = event => {};
+	loadProfilePage = event => { };
 	setUserToRead = _id => {
 		console.log(_id);
 		this.setState({ ...this.state, userToRead: { _id } });
@@ -286,15 +288,15 @@ class App extends Component {
 						(this.state.user.isLoggedIn ? (
 							<MeetingPage></MeetingPage>
 						) : (
-							// 임시
-							// <MessengerList
-							// 	socket={this.state.socket}
-							// 	user={this.state.user}
-							// 	getAppStateHandler={
-							// 		this.getAppStateHandler
-							// 	}></MessengerList>
-							<MainPage></MainPage>
-						))}
+								// 임시
+								// <MessengerList
+								// 	socket={this.state.socket}
+								// 	user={this.state.user}
+								// 	getAppStateHandler={
+								// 		this.getAppStateHandler
+								// 	}></MessengerList>
+								<MainPage></MainPage>
+							))}
 					{this.state.mode == "LOGIN" && (
 						<LoginPage
 							getAppModeHandler={
